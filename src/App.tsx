@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { ArchiveScreen } from "./archive/ArchiveScreen";
 import { BootSequence } from "./boot/BootSequence";
 import { markBootShown, shouldShowBoot } from "./boot/bootGate";
+import { QuestsScreen } from "./quests/QuestsScreen";
 import { BookNav } from "./reader/BookNav";
 import { ReaderPane } from "./reader/ReaderPane";
 import { useReaderStore } from "./store/reader";
@@ -53,6 +54,7 @@ function App() {
         </>
       )}
       {screen === "archive" && <ArchiveScreen />}
+      {screen === "quests" && <QuestsScreen />}
     </div>
   );
 }
