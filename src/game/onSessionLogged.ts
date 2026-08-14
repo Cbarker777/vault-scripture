@@ -5,6 +5,7 @@ import {
   listSelectedPerks,
 } from "../db/adapter";
 import { ITEMS } from "../data/items";
+import { generateId } from "../lib/id";
 import type { ItemDef } from "../loot/types";
 import { rollItem } from "../loot/roll";
 import { levelForXp } from "../progression/level";
@@ -27,7 +28,7 @@ export type SessionEffects = {
 };
 
 async function grantItem(defId: string, at: string): Promise<void> {
-  await addInventoryItem({ id: crypto.randomUUID(), defId, acquiredAt: at, equipped: false });
+  await addInventoryItem({ id: generateId(), defId, acquiredAt: at, equipped: false });
 }
 
 // Runs every reward-bearing side effect of a just-logged session: XP

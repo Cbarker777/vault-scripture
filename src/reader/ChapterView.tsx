@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 import type { Book, Chapter } from "../data/bible/types";
 import { hasReadChapterBefore, listSelectedPerks, logReadingSession } from "../db/adapter";
 import { runPostSessionEffects, type SessionEffects } from "../game/onSessionLogged";
+import { generateId } from "../lib/id";
 import { isNightShiftHours } from "../perks/nightShift";
 import { calculateXpAward } from "../progression/xp-award";
 import type { ReadingSession } from "../session/types";
@@ -20,6 +21,7 @@ export function ChapterView({ book, chapter }: { book: Book; chapter: Chapter })
   const [reflection, setReflection] = useState("");
   const [logged, setLogged] = useState<LoggedState | null>(null);
   const [logging, setLogging] = useState(false);
+  const [logError, setLogError] = useState<string | null>(null);
   const startedAtRef = useRef(new Date().toISOString());
   const lastVerseRef = useRef<HTMLSpanElement | null>(null);
   const announceLevelUp = useGameEventsStore((s) => s.announceLevelUp);
@@ -30,52 +32,59 @@ export function ChapterView({ book, chapter }: { book: Book; chapter: Chapter })
 
   async function handleLogSession() {
     setLogging(true);
+    setLogError(null);
 
-    const verified = isVerified({
-      dwellSeconds,
-      wordCount: chapter.wordCount,
-      scrollCompleted,
-      reflection,
-      comprehensionPassed: null,
-    });
+    try {
+      const verified = isVerified({
+        dwellSeconds,
+        wordCount: chapter.wordCount,
+        scrollCompleted,
+        reflection,
+        comprehensionPassed: null,
+      });
 
-    const [alreadyRead, perks] = await Promise.all([
-      hasReadChapterBefore(book.id, chapter.number),
-      listSelectedPerks(),
-    ]);
-    const hasNightShift = perks.some((p) => p.perkId === "night-shift");
+      const [alreadyRead, perks] = await Promise.all([
+        hasReadChapterBefore(book.id, chapter.number),
+        listSelectedPerks(),
+      ]);
+      const hasNightShift = perks.some((p) => p.perkId === "night-shift");
 
-    const xpAwarded = calculateXpAward({
-      verified,
-      wordCount: chapter.wordCount,
-      dwellSeconds,
-      firstTimeReadingThisChapter: !alreadyRead,
-      nightShiftBonus: hasNightShift && isNightShiftHours(new Date()),
-    });
+      const xpAwarded = calculateXpAward({
+        verified,
+        wordCount: chapter.wordCount,
+        dwellSeconds,
+        firstTimeReadingThisChapter: !alreadyRead,
+        nightShiftBonus: hasNightShift && isNightShiftHours(new Date()),
+      });
 
-    const session: ReadingSession = {
-      id: crypto.randomUUID(),
-      bookId: book.id,
-      chapter: chapter.number,
-      startedAt: startedAtRef.current,
-      endedAt: new Date().toISOString(),
-      dwellSeconds,
-      reflection: reflection.trim().length > 0 ? reflection.trim() : null,
-      comprehensionPassed: null,
-      xpAwarded,
-      verified,
-    };
+      const session: ReadingSession = {
+        id: generateId(),
+        bookId: book.id,
+        chapter: chapter.number,
+        startedAt: startedAtRef.current,
+        endedAt: new Date().toISOString(),
+        dwellSeconds,
+        reflection: reflection.trim().length > 0 ? reflection.trim() : null,
+        comprehensionPassed: null,
+        xpAwarded,
+        verified,
+      };
 
-    await logReadingSession(session);
-    const effects = await runPostSessionEffects(session);
+      await logReadingSession(session);
+      const effects = await runPostSessionEffects(session);
 
-    if (effects.leveledUp) {
-      announceLevelUp(effects.newLevel);
-      requestPerkPick(effects.newLevel);
+      if (effects.leveledUp) {
+        announceLevelUp(effects.newLevel);
+        requestPerkPick(effects.newLevel);
+      }
+
+      setLogged({ verified, xpAwarded, effects });
+    } catch (err) {
+      console.error(err);
+      setLogError("LOG SESSION FAILED — check the console and try again.");
+    } finally {
+      setLogging(false);
     }
-
-    setLogged({ verified, xpAwarded, effects });
-    setLogging(false);
   }
 
   return (
@@ -127,6 +136,7 @@ export function ChapterView({ book, chapter }: { book: Book; chapter: Chapter })
             {logged && (
               <span style={{ color: "var(--phosphor-dim)" }}>{formatLoggedMessage(logged)}</span>
             )}
+            {logError && <span style={{ color: "var(--rust)" }}>{logError}</span>}
           </div>
         </div>
       </div>
