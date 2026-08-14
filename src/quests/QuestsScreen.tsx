@@ -10,7 +10,11 @@ function bookName(bookId: string): string {
   return BOOKS.find((b) => b.id === bookId)?.name ?? bookId;
 }
 
-export function QuestsScreen() {
+export function QuestsScreen({
+  onOpenReading,
+}: {
+  onOpenReading: (bookId: string, chapter: number) => void;
+}) {
   const [sessions, setSessions] = useState<ReadingSession[] | null>(null);
   const [selectedPlanId, setSelectedPlanId] = useState(PLANS[0].id);
   const [selectedDay, setSelectedDay] = useState(1);
@@ -96,10 +100,23 @@ export function QuestsScreen() {
           />
           <span style={{ color: "var(--phosphor-dim)" }}>of {selectedPlan.days.length}</span>
         </div>
-        <p className="mt-2">
-          {dayReadings.length === 0
-            ? "No readings assigned."
-            : dayReadings.map((r) => `${bookName(r.bookId)} ${r.chapter}`).join(", ")}
+        <p className="mt-2 flex flex-wrap gap-x-1">
+          {dayReadings.length === 0 ? (
+            "No readings assigned."
+          ) : (
+            dayReadings.map((r, i) => (
+              <span key={`${r.bookId}:${r.chapter}`}>
+                <button
+                  type="button"
+                  className="underline hover:text-white"
+                  onClick={() => onOpenReading(r.bookId, r.chapter)}
+                >
+                  {bookName(r.bookId)} {r.chapter}
+                </button>
+                {i < dayReadings.length - 1 ? "," : ""}
+              </span>
+            ))
+          )}
         </p>
       </section>
 

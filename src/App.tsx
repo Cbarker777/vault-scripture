@@ -16,6 +16,7 @@ import { TerminalHome, type Screen } from "./terminal/TerminalHome";
 function App() {
   const loaded = useReaderStore((s) => s.loaded);
   const hydrate = useReaderStore((s) => s.hydrate);
+  const goTo = useReaderStore((s) => s.goTo);
   const [booting, setBooting] = useState(() => shouldShowBoot());
   const [screen, setScreen] = useState<Screen>("terminal");
 
@@ -27,6 +28,11 @@ function App() {
   function completeBoot() {
     markBootShown();
     setBooting(false);
+  }
+
+  function openReading(bookId: string, chapter: number) {
+    void goTo(bookId, chapter);
+    setScreen("reader");
   }
 
   if (booting) {
@@ -60,7 +66,7 @@ function App() {
         </>
       )}
       {screen === "archive" && <ArchiveScreen />}
-      {screen === "quests" && <QuestsScreen />}
+      {screen === "quests" && <QuestsScreen onOpenReading={openReading} />}
       {screen === "stats" && <StatsScreen />}
       {screen === "stash" && <StashScreen />}
 
