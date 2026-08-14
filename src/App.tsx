@@ -2,9 +2,14 @@ import { useEffect, useState } from "react";
 import { ArchiveScreen } from "./archive/ArchiveScreen";
 import { BootSequence } from "./boot/BootSequence";
 import { markBootShown, shouldShowBoot } from "./boot/bootGate";
+import { LevelUpRetune } from "./game/LevelUpRetune";
+import { applyEquippedTheme } from "./loot/applyEquippedTheme";
+import { PerkPicker } from "./perks/PerkPicker";
 import { QuestsScreen } from "./quests/QuestsScreen";
 import { BookNav } from "./reader/BookNav";
 import { ReaderPane } from "./reader/ReaderPane";
+import { StashScreen } from "./stash/StashScreen";
+import { StatsScreen } from "./stats/StatsScreen";
 import { useReaderStore } from "./store/reader";
 import { TerminalHome, type Screen } from "./terminal/TerminalHome";
 
@@ -16,6 +21,7 @@ function App() {
 
   useEffect(() => {
     void hydrate();
+    void applyEquippedTheme();
   }, [hydrate]);
 
   function completeBoot() {
@@ -55,6 +61,11 @@ function App() {
       )}
       {screen === "archive" && <ArchiveScreen />}
       {screen === "quests" && <QuestsScreen />}
+      {screen === "stats" && <StatsScreen />}
+      {screen === "stash" && <StashScreen />}
+
+      <LevelUpRetune />
+      <PerkPicker />
     </div>
   );
 }

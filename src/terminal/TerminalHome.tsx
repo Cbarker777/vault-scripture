@@ -1,9 +1,9 @@
-export type Screen = "terminal" | "reader" | "archive" | "quests";
+export type Screen = "terminal" | "reader" | "archive" | "quests" | "stats" | "stash";
 
 export function TerminalHome({
   onNavigate,
 }: {
-  onNavigate: (screen: "reader" | "archive" | "quests") => void;
+  onNavigate: (screen: "reader" | "archive" | "quests" | "stats" | "stash") => void;
 }) {
   return (
     <div className="chrome min-h-screen px-8 py-10 text-sm">
@@ -21,6 +21,20 @@ export function TerminalHome({
         <button
           type="button"
           className="chrome-label hover:text-white"
+          onClick={() => onNavigate("stats")}
+        >
+          Stats
+        </button>
+        <button
+          type="button"
+          className="chrome-label hover:text-white"
+          onClick={() => onNavigate("stash")}
+        >
+          Stash
+        </button>
+        <button
+          type="button"
+          className="chrome-label hover:text-white"
           onClick={() => onNavigate("quests")}
         >
           Quests
@@ -32,12 +46,6 @@ export function TerminalHome({
         >
           Archive
         </button>
-        <span className="chrome-label" style={{ color: "var(--phosphor-dim)" }}>
-          Stats — not yet installed
-        </span>
-        <span className="chrome-label" style={{ color: "var(--phosphor-dim)" }}>
-          Stash — not yet installed
-        </span>
       </nav>
     </div>
   );

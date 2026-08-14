@@ -5,6 +5,11 @@
 import initSqlJs, { type Database, type SqlJsStatic } from "sql.js";
 import migration001 from "./migrations/001_init.sql?raw";
 import migration002 from "./migrations/002_reading_sessions.sql?raw";
+import migration003 from "./migrations/003_caps_ledger.sql?raw";
+import migration004 from "./migrations/004_inventory.sql?raw";
+import migration005 from "./migrations/005_perks.sql?raw";
+import type { InventoryItem } from "../loot/types";
+import type { PerkId, SelectedPerk } from "../perks/types";
 import type { ReadingSession } from "../session/types";
 
 const IDB_NAME = "vault-scripture";
@@ -12,7 +17,7 @@ const IDB_STORE = "sqlite";
 const IDB_KEY = "main";
 const IDB_VERSION = 1;
 
-const MIGRATIONS: string[] = [migration001, migration002];
+const MIGRATIONS: string[] = [migration001, migration002, migration003, migration004, migration005];
 
 let sqlPromise: Promise<SqlJsStatic> | null = null;
 let dbPromise: Promise<Database> | null = null;
@@ -142,4 +147,83 @@ export async function listReadingSessions(): Promise<ReadingSession[]> {
       verified: Boolean(verified),
     };
   });
+}
+
+export async function hasReadChapterBefore(bookId: string, chapter: number): Promise<boolean> {
+  const db = await getDb();
+  const res = db.exec(
+    "SELECT 1 FROM reading_sessions WHERE book_id = ? AND chapter = ? LIMIT 1",
+    [bookId, chapter],
+  );
+  return res.length > 0 && res[0].values.length > 0;
+}
+
+// Returns true if this credit was newly applied (false if `reason` had
+// already been credited before, making repeated calls safe/idempotent).
+export async function creditCaps(reason: string, amount: number, at: string): Promise<boolean> {
+  const db = await getDb();
+  db.run("INSERT OR IGNORE INTO caps_ledger (reason, amount, created_at) VALUES (?, ?, ?)", [
+    reason,
+    amount,
+    at,
+  ]);
+  const applied = db.getRowsModified() > 0;
+  if (applied) await persist(db);
+  return applied;
+}
+
+export async function getCapsBalance(): Promise<number> {
+  const db = await getDb();
+  const res = db.exec("SELECT COALESCE(SUM(amount), 0) FROM caps_ledger");
+  return Number(res[0].values[0][0]);
+}
+
+export async function addInventoryItem(item: InventoryItem): Promise<void> {
+  const db = await getDb();
+  db.run(
+    "INSERT INTO inventory_items (id, def_id, acquired_at, equipped) VALUES (?, ?, ?, ?)",
+    [item.id, item.defId, item.acquiredAt, item.equipped ? 1 : 0],
+  );
+  await persist(db);
+}
+
+export async function listInventoryItems(): Promise<InventoryItem[]> {
+  const db = await getDb();
+  const res = db.exec(
+    "SELECT id, def_id, acquired_at, equipped FROM inventory_items ORDER BY acquired_at DESC",
+  );
+  if (res.length === 0) return [];
+  return res[0].values.map(([id, defId, acquiredAt, equipped]) => ({
+    id: String(id),
+    defId: String(defId),
+    acquiredAt: String(acquiredAt),
+    equipped: Boolean(equipped),
+  }));
+}
+
+export async function setItemEquipped(id: string, equipped: boolean): Promise<void> {
+  const db = await getDb();
+  db.run("UPDATE inventory_items SET equipped = ? WHERE id = ?", [equipped ? 1 : 0, id]);
+  await persist(db);
+}
+
+export async function selectPerk(level: number, perkId: PerkId, at: string): Promise<void> {
+  const db = await getDb();
+  db.run("INSERT OR IGNORE INTO perks_selected (level, perk_id, selected_at) VALUES (?, ?, ?)", [
+    level,
+    perkId,
+    at,
+  ]);
+  await persist(db);
+}
+
+export async function listSelectedPerks(): Promise<SelectedPerk[]> {
+  const db = await getDb();
+  const res = db.exec("SELECT level, perk_id, selected_at FROM perks_selected ORDER BY level ASC");
+  if (res.length === 0) return [];
+  return res[0].values.map(([level, perkId, selectedAt]) => ({
+    level: Number(level),
+    perkId: String(perkId) as PerkId,
+    selectedAt: String(selectedAt),
+  }));
 }

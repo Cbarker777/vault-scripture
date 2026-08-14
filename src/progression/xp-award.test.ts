@@ -94,6 +94,36 @@ describe("calculateXpAward", () => {
     expect(firstRead).toBe(23);
   });
 
+  it("applies the Night Shift perk's small bonus on top of the base award", () => {
+    const withoutBonus = calculateXpAward({
+      verified: true,
+      wordCount: WORD_COUNT,
+      dwellSeconds: EXPECTED_SECONDS,
+      firstTimeReadingThisChapter: false,
+    });
+    const withBonus = calculateXpAward({
+      verified: true,
+      wordCount: WORD_COUNT,
+      dwellSeconds: EXPECTED_SECONDS,
+      firstTimeReadingThisChapter: false,
+      nightShiftBonus: true,
+    });
+    expect(withBonus).toBeGreaterThan(withoutBonus);
+    expect(withBonus).toBe(11); // round(10 * 1.1)
+  });
+
+  it("does not apply the Night Shift bonus to an unverified session", () => {
+    expect(
+      calculateXpAward({
+        verified: false,
+        wordCount: WORD_COUNT,
+        dwellSeconds: EXPECTED_SECONDS,
+        firstTimeReadingThisChapter: false,
+        nightShiftBonus: true,
+      }),
+    ).toBe(0);
+  });
+
   it("makes grinding one short chapter worthless: rereads pay a small fraction of a first read", () => {
     const shortChapterFirstRead = calculateXpAward({
       verified: true,

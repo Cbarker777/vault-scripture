@@ -4,8 +4,22 @@ import type { Book, Chapter } from "../data/bible/types";
 import { ChapterView } from "./ChapterView";
 
 const logReadingSession = vi.fn().mockResolvedValue(undefined);
+const hasReadChapterBefore = vi.fn().mockResolvedValue(false);
+const listSelectedPerks = vi.fn().mockResolvedValue([]);
 vi.mock("../db/adapter", () => ({
   logReadingSession: (...args: unknown[]) => logReadingSession(...args),
+  hasReadChapterBefore: (...args: unknown[]) => hasReadChapterBefore(...args),
+  listSelectedPerks: (...args: unknown[]) => listSelectedPerks(...args),
+}));
+
+const runPostSessionEffects = vi.fn().mockResolvedValue({
+  leveledUp: false,
+  newLevel: 1,
+  itemsDropped: [],
+  capsEarned: 0,
+});
+vi.mock("../game/onSessionLogged", () => ({
+  runPostSessionEffects: (...args: unknown[]) => runPostSessionEffects(...args),
 }));
 
 class MockIntersectionObserver implements IntersectionObserver {
@@ -48,6 +62,9 @@ const fifteenWords = "word ".repeat(15);
 beforeEach(() => {
   vi.useFakeTimers();
   logReadingSession.mockClear();
+  hasReadChapterBefore.mockClear();
+  listSelectedPerks.mockClear();
+  runPostSessionEffects.mockClear();
   MockIntersectionObserver.instances = [];
   vi.stubGlobal("IntersectionObserver", MockIntersectionObserver);
   Object.defineProperty(document, "hidden", { value: false, configurable: true });
@@ -60,9 +77,12 @@ afterEach(() => {
 });
 
 describe("ChapterView", () => {
-  it("logs an unverified session when nothing has happened yet", () => {
+  it("logs an unverified session when nothing has happened yet", async () => {
     render(<ChapterView book={book} chapter={chapter} />);
-    fireEvent.click(screen.getByText("LOG SESSION"));
+
+    await act(async () => {
+      fireEvent.click(screen.getByText("LOG SESSION"));
+    });
 
     expect(logReadingSession).toHaveBeenCalledTimes(1);
     const session = logReadingSession.mock.calls[0][0];
@@ -71,7 +91,7 @@ describe("ChapterView", () => {
     expect(screen.getByText("Logged. No XP — verification incomplete.")).toBeTruthy();
   });
 
-  it("logs a verified session once dwell, scroll, and reflection all clear", () => {
+  it("logs a verified session once dwell, scroll, and reflection all clear, awarding real XP", async () => {
     render(<ChapterView book={book} chapter={chapter} />);
 
     act(() => {
@@ -84,21 +104,27 @@ describe("ChapterView", () => {
     });
 
     fireEvent.change(screen.getByLabelText(/Reflection/), { target: { value: fifteenWords } });
-    fireEvent.click(screen.getByText("LOG SESSION"));
+
+    await act(async () => {
+      fireEvent.click(screen.getByText("LOG SESSION"));
+    });
 
     expect(logReadingSession).toHaveBeenCalledTimes(1);
     const session = logReadingSession.mock.calls[0][0];
     expect(session.verified).toBe(true);
     expect(session.dwellSeconds).toBeGreaterThanOrEqual(10);
     expect(session.reflection).toBe(fifteenWords.trim());
-    expect(
-      screen.getByText("Logged. Verified — XP awaits the progression system."),
-    ).toBeTruthy();
+    // baseXP=ceil(40/25)=2, depth=1x (dwell==expected), first read=1.5x -> round(2*1.5)=3
+    expect(session.xpAwarded).toBe(3);
+    expect(screen.getByText(/^Logged\. Verified — \+3 XP\.$/)).toBeTruthy();
   });
 
-  it("disables the reflection field and button after logging", () => {
+  it("disables the reflection field and button after logging", async () => {
     render(<ChapterView book={book} chapter={chapter} />);
-    fireEvent.click(screen.getByText("LOG SESSION"));
+
+    await act(async () => {
+      fireEvent.click(screen.getByText("LOG SESSION"));
+    });
 
     expect(screen.getByLabelText(/Reflection/)).toBeDisabled();
     expect(screen.getByText("LOG SESSION")).toBeDisabled();

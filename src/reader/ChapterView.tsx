@@ -1,27 +1,56 @@
 import { useRef, useState } from "react";
 import type { Book, Chapter } from "../data/bible/types";
-import { logReadingSession } from "../db/adapter";
+import { hasReadChapterBefore, listSelectedPerks, logReadingSession } from "../db/adapter";
+import { runPostSessionEffects, type SessionEffects } from "../game/onSessionLogged";
+import { isNightShiftHours } from "../perks/nightShift";
+import { calculateXpAward } from "../progression/xp-award";
 import type { ReadingSession } from "../session/types";
 import { useDwellTimer } from "../session/useDwellTimer";
 import { useScrollCompletion } from "../session/useScrollCompletion";
 import { isVerified } from "../session/verify";
+import { useGameEventsStore } from "../store/gameEvents";
+
+type LoggedState = {
+  verified: boolean;
+  xpAwarded: number;
+  effects: SessionEffects;
+};
 
 export function ChapterView({ book, chapter }: { book: Book; chapter: Chapter }) {
   const [reflection, setReflection] = useState("");
-  const [logged, setLogged] = useState<{ verified: boolean } | null>(null);
+  const [logged, setLogged] = useState<LoggedState | null>(null);
+  const [logging, setLogging] = useState(false);
   const startedAtRef = useRef(new Date().toISOString());
   const lastVerseRef = useRef<HTMLSpanElement | null>(null);
+  const announceLevelUp = useGameEventsStore((s) => s.announceLevelUp);
+  const requestPerkPick = useGameEventsStore((s) => s.requestPerkPick);
 
   const dwellSeconds = useDwellTimer(logged === null);
   const scrollCompleted = useScrollCompletion(lastVerseRef);
 
-  function handleLogSession() {
+  async function handleLogSession() {
+    setLogging(true);
+
     const verified = isVerified({
       dwellSeconds,
       wordCount: chapter.wordCount,
       scrollCompleted,
       reflection,
       comprehensionPassed: null,
+    });
+
+    const [alreadyRead, perks] = await Promise.all([
+      hasReadChapterBefore(book.id, chapter.number),
+      listSelectedPerks(),
+    ]);
+    const hasNightShift = perks.some((p) => p.perkId === "night-shift");
+
+    const xpAwarded = calculateXpAward({
+      verified,
+      wordCount: chapter.wordCount,
+      dwellSeconds,
+      firstTimeReadingThisChapter: !alreadyRead,
+      nightShiftBonus: hasNightShift && isNightShiftHours(new Date()),
     });
 
     const session: ReadingSession = {
@@ -33,12 +62,20 @@ export function ChapterView({ book, chapter }: { book: Book; chapter: Chapter })
       dwellSeconds,
       reflection: reflection.trim().length > 0 ? reflection.trim() : null,
       comprehensionPassed: null,
-      xpAwarded: 0,
+      xpAwarded,
       verified,
     };
 
-    void logReadingSession(session);
-    setLogged({ verified });
+    await logReadingSession(session);
+    const effects = await runPostSessionEffects(session);
+
+    if (effects.leveledUp) {
+      announceLevelUp(effects.newLevel);
+      requestPerkPick(effects.newLevel);
+    }
+
+    setLogged({ verified, xpAwarded, effects });
+    setLogging(false);
   }
 
   return (
@@ -82,21 +119,28 @@ export function ChapterView({ book, chapter }: { book: Book; chapter: Chapter })
             <button
               type="button"
               className="chrome-label border border-current px-3 py-1 disabled:opacity-40"
-              disabled={logged !== null}
-              onClick={handleLogSession}
+              disabled={logged !== null || logging}
+              onClick={() => void handleLogSession()}
             >
               LOG SESSION
             </button>
             {logged && (
-              <span style={{ color: "var(--phosphor-dim)" }}>
-                {logged.verified
-                  ? "Logged. Verified — XP awaits the progression system."
-                  : "Logged. No XP — verification incomplete."}
-              </span>
+              <span style={{ color: "var(--phosphor-dim)" }}>{formatLoggedMessage(logged)}</span>
             )}
           </div>
         </div>
       </div>
     </div>
   );
+}
+
+function formatLoggedMessage(logged: LoggedState): string {
+  if (!logged.verified) return "Logged. No XP — verification incomplete.";
+
+  const parts = [`Logged. Verified — +${logged.xpAwarded} XP.`];
+  if (logged.effects.capsEarned > 0) parts.push(`+${logged.effects.capsEarned} CAPS.`);
+  if (logged.effects.itemsDropped.length > 0) {
+    parts.push(`DROPPED: ${logged.effects.itemsDropped.map((i) => i.name).join(", ")}.`);
+  }
+  return parts.join(" ");
 }
