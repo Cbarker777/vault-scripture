@@ -38,35 +38,6 @@
   );
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .chrome::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    background: var(--phosphor);
-    opacity: 0;
-    animation: crt-flicker 6.5s infinite;
-  }
-}
-
-@keyframes crt-flicker {
-  0%,
-  96%,
-  100% {
-    opacity: 0;
-  }
-  97% {
-    opacity: 0.03;
-  }
-  98% {
-    opacity: 0;
-  }
-  99% {
-    opacity: 0.05;
-  }
-}
-
 /* Reading pane: warm, printed, no scanlines or flicker — must stay
    comfortable for 20 minutes. */
 .reading-pane {
