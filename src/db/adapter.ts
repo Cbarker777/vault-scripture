@@ -115,3 +115,31 @@ export async function logReadingSession(session: ReadingSession): Promise<void> 
   );
   await persist(db);
 }
+
+export async function listReadingSessions(): Promise<ReadingSession[]> {
+  const db = await getDb();
+  const res = db.exec(
+    `SELECT id, book_id, chapter, started_at, ended_at, dwell_seconds, reflection,
+            comprehension_passed, xp_awarded, verified
+     FROM reading_sessions
+     ORDER BY ended_at DESC`,
+  );
+  if (res.length === 0) return [];
+
+  return res[0].values.map((row) => {
+    const [id, bookId, chapter, startedAt, endedAt, dwellSeconds, reflection, comprehensionPassed, xpAwarded, verified] =
+      row;
+    return {
+      id: String(id),
+      bookId: String(bookId),
+      chapter: Number(chapter),
+      startedAt: String(startedAt),
+      endedAt: String(endedAt),
+      dwellSeconds: Number(dwellSeconds),
+      reflection: reflection === null ? null : String(reflection),
+      comprehensionPassed: comprehensionPassed === null ? null : Boolean(comprehensionPassed),
+      xpAwarded: Number(xpAwarded),
+      verified: Boolean(verified),
+    };
+  });
+}

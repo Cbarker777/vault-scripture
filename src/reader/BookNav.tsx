@@ -17,32 +17,32 @@ export function BookNav() {
   }
 
   return (
-    <nav className="flex flex-wrap items-center gap-3 border-b border-neutral-300 px-4 py-3 text-sm">
+    <nav className="chrome flex flex-wrap items-center gap-3 border-b border-current px-4 py-3 text-sm">
       <select
-        className="rounded border border-neutral-400 bg-white px-2 py-1"
+        className="chrome-label border border-current bg-transparent px-2 py-1"
         value={bookId}
         onChange={(e) => handleBookChange(e.target.value)}
       >
         {BOOKS.map((b) => (
-          <option key={b.id} value={b.id}>
+          <option key={b.id} value={b.id} style={{ background: "var(--vault)" }}>
             {b.name}
           </option>
         ))}
       </select>
       <select
-        className="rounded border border-neutral-400 bg-white px-2 py-1"
+        className="chrome-label border border-current bg-transparent px-2 py-1"
         value={chapter}
         onChange={(e) => handleChapterChange(Number(e.target.value))}
       >
         {Array.from({ length: currentBook.chapterCount }, (_, i) => i + 1).map((n) => (
-          <option key={n} value={n}>
+          <option key={n} value={n} style={{ background: "var(--vault)" }}>
             Chapter {n}
           </option>
         ))}
       </select>
       <button
         type="button"
-        className="rounded border border-neutral-400 px-2 py-1 disabled:opacity-40"
+        className="chrome-label border border-current px-2 py-1 disabled:opacity-40"
         disabled={chapter <= 1}
         onClick={() => handleChapterChange(chapter - 1)}
       >
@@ -50,7 +50,7 @@ export function BookNav() {
       </button>
       <button
         type="button"
-        className="rounded border border-neutral-400 px-2 py-1 disabled:opacity-40"
+        className="chrome-label border border-current px-2 py-1 disabled:opacity-40"
         disabled={chapter >= currentBook.chapterCount}
         onClick={() => handleChapterChange(chapter + 1)}
       >

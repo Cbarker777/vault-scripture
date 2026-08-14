@@ -42,56 +42,61 @@ export function ChapterView({ book, chapter }: { book: Book; chapter: Chapter })
   }
 
   return (
-    <article
-      className="mx-auto max-w-[68ch] px-6 py-10"
-      style={{ fontFamily: "'EB Garamond', Georgia, serif", fontSize: "19px", lineHeight: 1.75 }}
-    >
-      <h1 className="mb-6 text-2xl font-normal">
-        {book.name} {chapter.number}
-      </h1>
-      <p>
-        {chapter.verses.map((v, i) => {
-          const isLast = i === chapter.verses.length - 1;
-          return (
-            <span key={v.number} ref={isLast ? lastVerseRef : undefined}>
-              <sup className="mr-1 text-neutral-400">{v.number}</sup>
-              {v.text}{" "}
-            </span>
-          );
-        })}
-      </p>
-
-      <div className="mt-10 border-t border-neutral-300 pt-6 font-sans text-sm">
-        <label htmlFor="reflection" className="mb-2 block text-neutral-600">
-          Reflection ({reflection.trim() ? reflection.trim().split(/\s+/).length : 0} words, 15
-          minimum)
-        </label>
-        <textarea
-          id="reflection"
-          className="w-full rounded border border-neutral-400 p-2"
-          rows={4}
-          value={reflection}
-          disabled={logged !== null}
-          onChange={(e) => setReflection(e.target.value)}
-        />
-        <div className="mt-3 flex items-center gap-3">
-          <button
-            type="button"
-            className="rounded border border-neutral-400 px-3 py-1 disabled:opacity-40"
-            disabled={logged !== null}
-            onClick={handleLogSession}
-          >
-            LOG SESSION
-          </button>
-          {logged && (
-            <span className="text-neutral-600">
-              {logged.verified
-                ? "Logged. Verified — XP awaits the progression system."
-                : "Logged. No XP — verification incomplete."}
-            </span>
-          )}
+    <div>
+      <div className="reading-pane px-6 py-10">
+        <div className="measure">
+          <h1 className="mb-6 text-2xl font-normal">
+            {book.name} {chapter.number}
+          </h1>
+          <p>
+            {chapter.verses.map((v, i) => {
+              const isLast = i === chapter.verses.length - 1;
+              return (
+                <span key={v.number} ref={isLast ? lastVerseRef : undefined}>
+                  <sup className="mr-1" style={{ opacity: 0.5 }}>
+                    {v.number}
+                  </sup>
+                  {v.text}{" "}
+                </span>
+              );
+            })}
+          </p>
         </div>
       </div>
-    </article>
+
+      <div className="chrome px-6 py-6 text-sm">
+        <div className="measure mx-auto">
+          <label htmlFor="reflection" className="chrome-label mb-2 block">
+            Reflection ({reflection.trim() ? reflection.trim().split(/\s+/).length : 0} words, 15
+            minimum)
+          </label>
+          <textarea
+            id="reflection"
+            className="w-full border border-current bg-transparent p-2"
+            rows={4}
+            value={reflection}
+            disabled={logged !== null}
+            onChange={(e) => setReflection(e.target.value)}
+          />
+          <div className="mt-3 flex items-center gap-3">
+            <button
+              type="button"
+              className="chrome-label border border-current px-3 py-1 disabled:opacity-40"
+              disabled={logged !== null}
+              onClick={handleLogSession}
+            >
+              LOG SESSION
+            </button>
+            {logged && (
+              <span style={{ color: "var(--phosphor-dim)" }}>
+                {logged.verified
+                  ? "Logged. Verified — XP awaits the progression system."
+                  : "Logged. No XP — verification incomplete."}
+              </span>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
