@@ -1,0 +1,464 @@
+[
+  {
+    "id": "gen",
+    "name": "Genesis",
+    "testament": "OT",
+    "genre": "Law",
+    "chapterCount": 50
+  },
+  {
+    "id": "exo",
+    "name": "Exodus",
+    "testament": "OT",
+    "genre": "Law",
+    "chapterCount": 40
+  },
+  {
+    "id": "lev",
+    "name": "Leviticus",
+    "testament": "OT",
+    "genre": "Law",
+    "chapterCount": 27
+  },
+  {
+    "id": "num",
+    "name": "Numbers",
+    "testament": "OT",
+    "genre": "Law",
+    "chapterCount": 36
+  },
+  {
+    "id": "deu",
+    "name": "Deuteronomy",
+    "testament": "OT",
+    "genre": "Law",
+    "chapterCount": 34
+  },
+  {
+    "id": "jos",
+    "name": "Joshua",
+    "testament": "OT",
+    "genre": "History",
+    "chapterCount": 24
+  },
+  {
+    "id": "jdg",
+    "name": "Judges",
+    "testament": "OT",
+    "genre": "History",
+    "chapterCount": 21
+  },
+  {
+    "id": "rut",
+    "name": "Ruth",
+    "testament": "OT",
+    "genre": "History",
+    "chapterCount": 4
+  },
+  {
+    "id": "1sa",
+    "name": "1 Samuel",
+    "testament": "OT",
+    "genre": "History",
+    "chapterCount": 31
+  },
+  {
+    "id": "2sa",
+    "name": "2 Samuel",
+    "testament": "OT",
+    "genre": "History",
+    "chapterCount": 24
+  },
+  {
+    "id": "1ki",
+    "name": "1 Kings",
+    "testament": "OT",
+    "genre": "History",
+    "chapterCount": 22
+  },
+  {
+    "id": "2ki",
+    "name": "2 Kings",
+    "testament": "OT",
+    "genre": "History",
+    "chapterCount": 25
+  },
+  {
+    "id": "1ch",
+    "name": "1 Chronicles",
+    "testament": "OT",
+    "genre": "History",
+    "chapterCount": 29
+  },
+  {
+    "id": "2ch",
+    "name": "2 Chronicles",
+    "testament": "OT",
+    "genre": "History",
+    "chapterCount": 36
+  },
+  {
+    "id": "ezr",
+    "name": "Ezra",
+    "testament": "OT",
+    "genre": "History",
+    "chapterCount": 10
+  },
+  {
+    "id": "neh",
+    "name": "Nehemiah",
+    "testament": "OT",
+    "genre": "History",
+    "chapterCount": 13
+  },
+  {
+    "id": "est",
+    "name": "Esther",
+    "testament": "OT",
+    "genre": "History",
+    "chapterCount": 10
+  },
+  {
+    "id": "job",
+    "name": "Job",
+    "testament": "OT",
+    "genre": "Wisdom",
+    "chapterCount": 42
+  },
+  {
+    "id": "psa",
+    "name": "Psalms",
+    "testament": "OT",
+    "genre": "Wisdom",
+    "chapterCount": 150
+  },
+  {
+    "id": "pro",
+    "name": "Proverbs",
+    "testament": "OT",
+    "genre": "Wisdom",
+    "chapterCount": 31
+  },
+  {
+    "id": "ecc",
+    "name": "Ecclesiastes",
+    "testament": "OT",
+    "genre": "Wisdom",
+    "chapterCount": 12
+  },
+  {
+    "id": "sng",
+    "name": "Song of Songs",
+    "testament": "OT",
+    "genre": "Wisdom",
+    "chapterCount": 8
+  },
+  {
+    "id": "isa",
+    "name": "Isaiah",
+    "testament": "OT",
+    "genre": "Prophecy",
+    "chapterCount": 66
+  },
+  {
+    "id": "jer",
+    "name": "Jeremiah",
+    "testament": "OT",
+    "genre": "Prophecy",
+    "chapterCount": 52
+  },
+  {
+    "id": "lam",
+    "name": "Lamentations",
+    "testament": "OT",
+    "genre": "Prophecy",
+    "chapterCount": 5
+  },
+  {
+    "id": "ezk",
+    "name": "Ezekiel",
+    "testament": "OT",
+    "genre": "Prophecy",
+    "chapterCount": 48
+  },
+  {
+    "id": "dan",
+    "name": "Daniel",
+    "testament": "OT",
+    "genre": "Prophecy",
+    "chapterCount": 12
+  },
+  {
+    "id": "hos",
+    "name": "Hosea",
+    "testament": "OT",
+    "genre": "Prophecy",
+    "chapterCount": 14
+  },
+  {
+    "id": "jol",
+    "name": "Joel",
+    "testament": "OT",
+    "genre": "Prophecy",
+    "chapterCount": 3
+  },
+  {
+    "id": "amo",
+    "name": "Amos",
+    "testament": "OT",
+    "genre": "Prophecy",
+    "chapterCount": 9
+  },
+  {
+    "id": "oba",
+    "name": "Obadiah",
+    "testament": "OT",
+    "genre": "Prophecy",
+    "chapterCount": 1
+  },
+  {
+    "id": "jon",
+    "name": "Jonah",
+    "testament": "OT",
+    "genre": "Prophecy",
+    "chapterCount": 4
+  },
+  {
+    "id": "mic",
+    "name": "Micah",
+    "testament": "OT",
+    "genre": "Prophecy",
+    "chapterCount": 7
+  },
+  {
+    "id": "nam",
+    "name": "Nahum",
+    "testament": "OT",
+    "genre": "Prophecy",
+    "chapterCount": 3
+  },
+  {
+    "id": "hab",
+    "name": "Habakkuk",
+    "testament": "OT",
+    "genre": "Prophecy",
+    "chapterCount": 3
+  },
+  {
+    "id": "zep",
+    "name": "Zephaniah",
+    "testament": "OT",
+    "genre": "Prophecy",
+    "chapterCount": 3
+  },
+  {
+    "id": "hag",
+    "name": "Haggai",
+    "testament": "OT",
+    "genre": "Prophecy",
+    "chapterCount": 2
+  },
+  {
+    "id": "zec",
+    "name": "Zechariah",
+    "testament": "OT",
+    "genre": "Prophecy",
+    "chapterCount": 14
+  },
+  {
+    "id": "mal",
+    "name": "Malachi",
+    "testament": "OT",
+    "genre": "Prophecy",
+    "chapterCount": 4
+  },
+  {
+    "id": "mat",
+    "name": "Matthew",
+    "testament": "NT",
+    "genre": "Gospel",
+    "chapterCount": 28
+  },
+  {
+    "id": "mrk",
+    "name": "Mark",
+    "testament": "NT",
+    "genre": "Gospel",
+    "chapterCount": 16
+  },
+  {
+    "id": "luk",
+    "name": "Luke",
+    "testament": "NT",
+    "genre": "Gospel",
+    "chapterCount": 24
+  },
+  {
+    "id": "jhn",
+    "name": "John",
+    "testament": "NT",
+    "genre": "Gospel",
+    "chapterCount": 21
+  },
+  {
+    "id": "act",
+    "name": "Acts",
+    "testament": "NT",
+    "genre": "Gospel",
+    "chapterCount": 28
+  },
+  {
+    "id": "rom",
+    "name": "Romans",
+    "testament": "NT",
+    "genre": "Epistle",
+    "chapterCount": 16
+  },
+  {
+    "id": "1co",
+    "name": "1 Corinthians",
+    "testament": "NT",
+    "genre": "Epistle",
+    "chapterCount": 16
+  },
+  {
+    "id": "2co",
+    "name": "2 Corinthians",
+    "testament": "NT",
+    "genre": "Epistle",
+    "chapterCount": 13
+  },
+  {
+    "id": "gal",
+    "name": "Galatians",
+    "testament": "NT",
+    "genre": "Epistle",
+    "chapterCount": 6
+  },
+  {
+    "id": "eph",
+    "name": "Ephesians",
+    "testament": "NT",
+    "genre": "Epistle",
+    "chapterCount": 6
+  },
+  {
+    "id": "php",
+    "name": "Philippians",
+    "testament": "NT",
+    "genre": "Epistle",
+    "chapterCount": 4
+  },
+  {
+    "id": "col",
+    "name": "Colossians",
+    "testament": "NT",
+    "genre": "Epistle",
+    "chapterCount": 4
+  },
+  {
+    "id": "1th",
+    "name": "1 Thessalonians",
+    "testament": "NT",
+    "genre": "Epistle",
+    "chapterCount": 5
+  },
+  {
+    "id": "2th",
+    "name": "2 Thessalonians",
+    "testament": "NT",
+    "genre": "Epistle",
+    "chapterCount": 3
+  },
+  {
+    "id": "1ti",
+    "name": "1 Timothy",
+    "testament": "NT",
+    "genre": "Epistle",
+    "chapterCount": 6
+  },
+  {
+    "id": "2ti",
+    "name": "2 Timothy",
+    "testament": "NT",
+    "genre": "Epistle",
+    "chapterCount": 4
+  },
+  {
+    "id": "tit",
+    "name": "Titus",
+    "testament": "NT",
+    "genre": "Epistle",
+    "chapterCount": 3
+  },
+  {
+    "id": "phm",
+    "name": "Philemon",
+    "testament": "NT",
+    "genre": "Epistle",
+    "chapterCount": 1
+  },
+  {
+    "id": "heb",
+    "name": "Hebrews",
+    "testament": "NT",
+    "genre": "Epistle",
+    "chapterCount": 13
+  },
+  {
+    "id": "jas",
+    "name": "James",
+    "testament": "NT",
+    "genre": "Epistle",
+    "chapterCount": 5
+  },
+  {
+    "id": "1pe",
+    "name": "1 Peter",
+    "testament": "NT",
+    "genre": "Epistle",
+    "chapterCount": 5
+  },
+  {
+    "id": "2pe",
+    "name": "2 Peter",
+    "testament": "NT",
+    "genre": "Epistle",
+    "chapterCount": 3
+  },
+  {
+    "id": "1jn",
+    "name": "1 John",
+    "testament": "NT",
+    "genre": "Epistle",
+    "chapterCount": 5
+  },
+  {
+    "id": "2jn",
+    "name": "2 John",
+    "testament": "NT",
+    "genre": "Epistle",
+    "chapterCount": 1
+  },
+  {
+    "id": "3jn",
+    "name": "3 John",
+    "testament": "NT",
+    "genre": "Epistle",
+    "chapterCount": 1
+  },
+  {
+    "id": "jud",
+    "name": "Jude",
+    "testament": "NT",
+    "genre": "Epistle",
+    "chapterCount": 1
+  },
+  {
+    "id": "rev",
+    "name": "Revelation",
+    "testament": "NT",
+    "genre": "Prophecy",
+    "chapterCount": 22
+  }
+]
