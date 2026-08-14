@@ -49,6 +49,22 @@ push yourself), leave volumes empty, map container port `80` to whatever
 host port you want, and set the WebUI field to
 `http://[IP]:[PORT:8080]/` so it shows up with a launch icon.
 
+### Updating
+
+Once it's running, pull and redeploy new commits with:
+
+```bash
+bash update.sh
+```
+
+(`bash update.sh` works regardless of the executable bit; `./update.sh`
+works too if you've `chmod +x`'d it.) It pulls the latest commit,
+rebuilds the image, and swaps the running container for a fresh one.
+Edit the `HOST_PORT`/`CONTAINER_NAME` variables at the top of the script
+if your setup differs from the defaults (8181, `vault-scripture`).
+Reading progress is untouched either way — it lives in the browser, not
+the container.
+
 ### Reaching it off your LAN
 
 By default the container is only reachable inside your home network. To
