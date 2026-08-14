@@ -1,32 +1,58 @@
-# React + TypeScript + Vite
+# Vault Scripture
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+A single-user, self-hosted, offline-first Bible reading app styled as a
+retro-terminal RPG. See [`CLAUDE.md`](./CLAUDE.md) for the full spec and
+working agreement.
 
-Currently, two official plugins are available:
+## Development
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```bash
+npm install
+npm run dev       # dev server
+npm test          # vitest
+npm run ingest:bible   # re-pull the WEB text into src/data/bible/*.json
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+## Deploying on Unraid (Docker)
+
+The app is a fully static build served by nginx — there is no backend and
+no database to run. All reading history, XP, stats, loot, and caps are
+stored in the *browser's* IndexedDB, not on the server, so the container
+itself is stateless and needs no volumes.
+
+**Because data lives in the browser, not the server:** opening the app
+from a different device or browser gives you a separate, empty profile —
+there's no account system or sync between them (that's intentional, see
+`CLAUDE.md` §1's non-goals). Treat it as "one browser, one save file,"
+even though the container is reachable from anywhere on your network.
+
+### Option A — docker-compose (Compose Manager plugin)
+
+```bash
+docker compose up -d --build
+```
+
+Then open `http://<unraid-ip>:8080`. Edit the port mapping in
+`docker-compose.yml` if 8080 is taken.
+
+### Option B — plain `docker build` / `docker run`
+
+```bash
+docker build -t vault-scripture .
+docker run -d --name vault-scripture -p 8080:80 --restart unless-stopped vault-scripture
+```
+
+### Option C — Unraid's Docker tab, from source
+
+Add a container manually: point it at this repo (or a registry image you
+push yourself), leave volumes empty, map container port `80` to whatever
+host port you want, and set the WebUI field to
+`http://[IP]:[PORT:8080]/` so it shows up with a launch icon.
+
+### Reaching it off your LAN
+
+By default the container is only reachable inside your home network. To
+use it from outside (e.g. your phone off wifi), don't port-forward it
+directly to the internet — put it behind a VPN back into your LAN
+(Tailscale or WireGuard) instead. Whatever device you connect from still
+gets its own separate browser profile/data, per the caveat above.

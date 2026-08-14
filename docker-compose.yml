@@ -1,0 +1,10 @@
+services:
+  vault-scripture:
+    build: .
+    container_name: vault-scripture
+    ports:
+      - "8080:80"
+    restart: unless-stopped
+    # No volumes: the container is stateless. All reading history, XP,
+    # stats, loot, and caps live in the browser's IndexedDB, per browser
+    # profile — see README for what that means across devices.
