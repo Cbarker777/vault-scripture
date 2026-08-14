@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { loadBook } from "../data/bible";
 import type { Book } from "../data/bible/types";
 import { useReaderStore } from "../store/reader";
+import { ChapterView } from "./ChapterView";
 
 export function ReaderPane() {
   const bookId = useReaderStore((s) => s.bookId);
@@ -28,22 +29,5 @@ export function ReaderPane() {
     return <div className="px-6 py-10 text-center text-neutral-500">Chapter not found.</div>;
   }
 
-  return (
-    <article
-      className="mx-auto max-w-[68ch] px-6 py-10"
-      style={{ fontFamily: "'EB Garamond', Georgia, serif", fontSize: "19px", lineHeight: 1.75 }}
-    >
-      <h1 className="mb-6 text-2xl font-normal">
-        {book.name} {chapterData.number}
-      </h1>
-      <p>
-        {chapterData.verses.map((v) => (
-          <span key={v.number}>
-            <sup className="mr-1 text-neutral-400">{v.number}</sup>
-            {v.text}{" "}
-          </span>
-        ))}
-      </p>
-    </article>
-  );
+  return <ChapterView key={`${book.id}:${chapterData.number}`} book={book} chapter={chapterData} />;
 }

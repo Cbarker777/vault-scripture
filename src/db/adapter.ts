@@ -4,13 +4,15 @@
 // implement the same functions later without touching callers.
 import initSqlJs, { type Database, type SqlJsStatic } from "sql.js";
 import migration001 from "./migrations/001_init.sql?raw";
+import migration002 from "./migrations/002_reading_sessions.sql?raw";
+import type { ReadingSession } from "../session/types";
 
 const IDB_NAME = "vault-scripture";
 const IDB_STORE = "sqlite";
 const IDB_KEY = "main";
 const IDB_VERSION = 1;
 
-const MIGRATIONS: string[] = [migration001];
+const MIGRATIONS: string[] = [migration001, migration002];
 
 let sqlPromise: Promise<SqlJsStatic> | null = null;
 let dbPromise: Promise<Database> | null = null;
@@ -88,6 +90,28 @@ export async function setReaderPosition(position: ReaderPosition): Promise<void>
     `INSERT INTO reader_position (id, book_id, chapter) VALUES (1, ?, ?)
      ON CONFLICT(id) DO UPDATE SET book_id = excluded.book_id, chapter = excluded.chapter`,
     [position.bookId, position.chapter],
+  );
+  await persist(db);
+}
+
+export async function logReadingSession(session: ReadingSession): Promise<void> {
+  const db = await getDb();
+  db.run(
+    `INSERT INTO reading_sessions
+       (id, book_id, chapter, started_at, ended_at, dwell_seconds, reflection, comprehension_passed, xp_awarded, verified)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    [
+      session.id,
+      session.bookId,
+      session.chapter,
+      session.startedAt,
+      session.endedAt,
+      session.dwellSeconds,
+      session.reflection,
+      session.comprehensionPassed === null ? null : session.comprehensionPassed ? 1 : 0,
+      session.xpAwarded,
+      session.verified ? 1 : 0,
+    ],
   );
   await persist(db);
 }
