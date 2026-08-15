@@ -11,6 +11,7 @@ export function calculateXpAward(params: {
   dwellSeconds: number;
   firstTimeReadingThisChapter: boolean;
   nightShiftBonus?: boolean;
+  itemsMultiplier?: number;
 }): number {
   if (!params.verified) return 0;
 
@@ -21,6 +22,7 @@ export function calculateXpAward(params: {
     ? FIRST_READ_MULTIPLIER
     : REREAD_MULTIPLIER;
   const nightShiftMul = params.nightShiftBonus ? NIGHT_SHIFT_MULTIPLIER : 1.0;
+  const itemsMul = params.itemsMultiplier ?? 1.0;
 
-  return Math.round(baseXP * depthMul * firstMul * nightShiftMul);
+  return Math.round(baseXP * depthMul * firstMul * nightShiftMul * itemsMul);
 }

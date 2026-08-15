@@ -124,6 +124,49 @@ describe("calculateXpAward", () => {
     ).toBe(0);
   });
 
+  it("applies an equipped item's XP bonus on top of the base award", () => {
+    const withoutItem = calculateXpAward({
+      verified: true,
+      wordCount: WORD_COUNT,
+      dwellSeconds: EXPECTED_SECONDS,
+      firstTimeReadingThisChapter: false,
+    });
+    const withItem = calculateXpAward({
+      verified: true,
+      wordCount: WORD_COUNT,
+      dwellSeconds: EXPECTED_SECONDS,
+      firstTimeReadingThisChapter: false,
+      itemsMultiplier: 1.1,
+    });
+    expect(withItem).toBeGreaterThan(withoutItem);
+    expect(withItem).toBe(11); // round(10 * 1.1)
+  });
+
+  it("stacks the Night Shift and item bonuses together", () => {
+    expect(
+      calculateXpAward({
+        verified: true,
+        wordCount: WORD_COUNT,
+        dwellSeconds: EXPECTED_SECONDS,
+        firstTimeReadingThisChapter: false,
+        nightShiftBonus: true,
+        itemsMultiplier: 1.1,
+      }),
+    ).toBe(Math.round(10 * 1.1 * 1.1)); // 12
+  });
+
+  it("does not apply the item bonus to an unverified session", () => {
+    expect(
+      calculateXpAward({
+        verified: false,
+        wordCount: WORD_COUNT,
+        dwellSeconds: EXPECTED_SECONDS,
+        firstTimeReadingThisChapter: false,
+        itemsMultiplier: 1.1,
+      }),
+    ).toBe(0);
+  });
+
   it("makes grinding one short chapter worthless: rereads pay a small fraction of a first read", () => {
     const shortChapterFirstRead = calculateXpAward({
       verified: true,

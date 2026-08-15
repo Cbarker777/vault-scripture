@@ -16,6 +16,9 @@ export type ItemDef = {
   // CSS custom-property overrides applied while the item is equipped —
   // no item should ever need bespoke rendering code.
   apply: Record<string, string>;
+  // Optional mechanical effect while equipped. Utility, not a power
+  // ladder — small multipliers only, per CLAUDE.md §7.
+  effect?: { xpBonus: number };
 };
 
 export type InventoryItem = {

@@ -72,6 +72,7 @@ export const ITEMS: ItemDef[] = [
     name: "Vault Hum Loop",
     flavor: "Thirty seconds of HVAC. Strangely comforting.",
     apply: {},
+    effect: { xpBonus: 1.1 },
   },
   {
     id: "holotape-chime",

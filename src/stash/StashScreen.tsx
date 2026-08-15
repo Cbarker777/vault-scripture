@@ -62,8 +62,13 @@ export function StashScreen() {
                 {entries.map(({ inv, def }) => (
                   <li key={inv.id} className="flex items-center gap-3">
                     <span className="chrome-label w-48 shrink-0">{def.name}</span>
-                    <span className="flex-1" style={{ color: "var(--phosphor-dim)" }}>
-                      {def.flavor}
+                    <span className="flex-1">
+                      <span style={{ color: "var(--phosphor-dim)" }}>{def.flavor}</span>
+                      {def.effect && (
+                        <span className="chrome-label ml-2" style={{ color: "var(--amber)" }}>
+                          +{Math.round((def.effect.xpBonus - 1) * 100)}% XP WHILE EQUIPPED
+                        </span>
+                      )}
                     </span>
                     <button
                       type="button"

@@ -1,8 +1,14 @@
 import { useRef, useState } from "react";
 import type { Book, Chapter } from "../data/bible/types";
-import { hasReadChapterBefore, listSelectedPerks, logReadingSession } from "../db/adapter";
+import {
+  hasReadChapterBefore,
+  listInventoryItems,
+  listSelectedPerks,
+  logReadingSession,
+} from "../db/adapter";
 import { runPostSessionEffects, type SessionEffects } from "../game/onSessionLogged";
 import { generateId } from "../lib/id";
+import { equippedXpMultiplier } from "../loot/xpBonus";
 import { isNightShiftHours } from "../perks/nightShift";
 import { calculateXpAward } from "../progression/xp-award";
 import type { ReadingSession } from "../session/types";
@@ -43,9 +49,10 @@ export function ChapterView({ book, chapter }: { book: Book; chapter: Chapter })
         comprehensionPassed: null,
       });
 
-      const [alreadyRead, perks] = await Promise.all([
+      const [alreadyRead, perks, inventory] = await Promise.all([
         hasReadChapterBefore(book.id, chapter.number),
         listSelectedPerks(),
+        listInventoryItems(),
       ]);
       const hasNightShift = perks.some((p) => p.perkId === "night-shift");
 
@@ -55,6 +62,7 @@ export function ChapterView({ book, chapter }: { book: Book; chapter: Chapter })
         dwellSeconds,
         firstTimeReadingThisChapter: !alreadyRead,
         nightShiftBonus: hasNightShift && isNightShiftHours(new Date()),
+        itemsMultiplier: equippedXpMultiplier(inventory),
       });
 
       const session: ReadingSession = {
