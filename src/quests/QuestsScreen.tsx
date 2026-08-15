@@ -52,7 +52,14 @@ export function QuestsScreen({
           Daily Bounty
         </h2>
         <p>
-          {bookName(bounty.bookId)} {bounty.chapter} —{" "}
+          <button
+            type="button"
+            className="underline hover:text-white"
+            onClick={() => onOpenReading(bounty.bookId, bounty.chapter)}
+          >
+            {bookName(bounty.bookId)} {bounty.chapter}
+          </button>{" "}
+          —{" "}
           <span style={{ color: bountyDone ? "var(--phosphor)" : "var(--phosphor-dim)" }}>
             {bountyDone ? "COMPLETE" : "OPEN — expires at local midnight"}
           </span>
