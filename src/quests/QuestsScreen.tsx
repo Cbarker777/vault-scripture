@@ -38,8 +38,11 @@ export function QuestsScreen({
   const bounty = getBountyForDate(today);
   const bountyDone = isBountyComplete(sessions, bounty, today);
 
+  const readSet = new Set(sessions.map((s) => `${s.bookId}:${s.chapter}`));
+
   const selectedPlan = PLANS.find((p) => p.id === selectedPlanId) ?? PLANS[0];
   const dayReadings = selectedPlan.days.find((d) => d.day === selectedDay)?.readings ?? [];
+  const dayReadCount = dayReadings.filter((r) => readSet.has(`${r.bookId}:${r.chapter}`)).length;
 
   return (
     <div className="chrome min-h-screen px-8 py-10 text-sm">
@@ -106,23 +109,32 @@ export function QuestsScreen({
             className="w-20 border border-current bg-transparent px-2 py-1"
           />
           <span style={{ color: "var(--phosphor-dim)" }}>of {selectedPlan.days.length}</span>
+          {dayReadings.length > 0 && (
+            <span style={{ color: "var(--phosphor-dim)" }}>
+              — {dayReadCount}/{dayReadings.length} read
+            </span>
+          )}
         </div>
         <p className="mt-2 flex flex-wrap gap-x-1">
           {dayReadings.length === 0 ? (
             "No readings assigned."
           ) : (
-            dayReadings.map((r, i) => (
-              <span key={`${r.bookId}:${r.chapter}`}>
-                <button
-                  type="button"
-                  className="underline hover:text-white"
-                  onClick={() => onOpenReading(r.bookId, r.chapter)}
-                >
-                  {bookName(r.bookId)} {r.chapter}
-                </button>
-                {i < dayReadings.length - 1 ? "," : ""}
-              </span>
-            ))
+            dayReadings.map((r, i) => {
+              const done = readSet.has(`${r.bookId}:${r.chapter}`);
+              return (
+                <span key={`${r.bookId}:${r.chapter}`}>
+                  <button
+                    type="button"
+                    className="underline hover:text-white"
+                    style={{ color: done ? "var(--amber)" : "var(--phosphor)" }}
+                    onClick={() => onOpenReading(r.bookId, r.chapter)}
+                  >
+                    {bookName(r.bookId)} {r.chapter}
+                  </button>
+                  {i < dayReadings.length - 1 ? "," : ""}
+                </span>
+              );
+            })
           )}
         </p>
       </section>
