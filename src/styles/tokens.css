@@ -13,7 +13,6 @@
 
 /* Machine chrome: menus, nav, buttons, stats — typed, green, quietly alive. */
 .chrome {
-  position: relative;
   font-family: var(--font-mono);
   letter-spacing: 0.05em;
   color: var(--phosphor);
@@ -22,20 +21,6 @@
 
 .chrome-label {
   text-transform: uppercase;
-}
-
-.chrome::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background-image: repeating-linear-gradient(
-    to bottom,
-    rgba(0, 0, 0, 0.35) 0px,
-    rgba(0, 0, 0, 0.35) 1px,
-    transparent 1px,
-    transparent 3px
-  );
 }
 
 /* Reading pane: warm, printed, no scanlines or flicker — must stay
