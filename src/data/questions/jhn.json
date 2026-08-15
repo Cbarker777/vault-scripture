@@ -1,0 +1,42 @@
+[
+  {
+    "chapter": 3,
+    "questions": [
+      {
+        "question": "Who came to Jesus at night to ask him questions?",
+        "choices": ["Nicodemus", "A Roman centurion", "The woman at the well"],
+        "correctIndex": 0
+      },
+      {
+        "question": "What did Jesus say a person must do to see the Kingdom of God?",
+        "choices": ["Keep the whole law", "Be born anew", "Give away all possessions"],
+        "correctIndex": 1
+      },
+      {
+        "question": "According to this chapter, why did God send his Son into the world?",
+        "choices": ["To judge the world", "To punish sinners", "To save the world"],
+        "correctIndex": 2
+      }
+    ]
+  },
+  {
+    "chapter": 11,
+    "questions": [
+      {
+        "question": "What was Lazarus's relationship to Mary and Martha?",
+        "choices": ["Their father", "Their brother", "Their servant"],
+        "correctIndex": 1
+      },
+      {
+        "question": "How many days had Lazarus been in the tomb when Jesus arrived?",
+        "choices": ["One day", "Four days", "Seven days"],
+        "correctIndex": 1
+      },
+      {
+        "question": "What did Jesus cry out to raise Lazarus?",
+        "choices": ["\"Lazarus, come out!\"", "\"Lazarus, arise and walk!\"", "\"Peace, be still!\""],
+        "correctIndex": 0
+      }
+    ]
+  }
+]

@@ -1,0 +1,22 @@
+[
+  {
+    "chapter": 1,
+    "questions": [
+      {
+        "question": "Where did Naomi's family go to live because of a famine?",
+        "choices": ["Egypt", "Moab", "Babylon"],
+        "correctIndex": 1
+      },
+      {
+        "question": "Which daughter-in-law chose to stay with Naomi rather than return to her own people?",
+        "choices": ["Orpah", "Ruth", "Mahlon"],
+        "correctIndex": 1
+      },
+      {
+        "question": "What name did Naomi ask people to call her instead of Naomi?",
+        "choices": ["Ruth", "Bethlehem", "Mara"],
+        "correctIndex": 2
+      }
+    ]
+  }
+]

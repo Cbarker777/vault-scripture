@@ -24,6 +24,17 @@ vi.mock("../game/onSessionLogged", () => ({
   runPostSessionEffects: (...args: unknown[]) => runPostSessionEffects(...args),
 }));
 
+const loadChapterQuestions = vi.fn().mockResolvedValue(null);
+vi.mock("../data/questions", () => ({
+  loadChapterQuestions: (...args: unknown[]) => loadChapterQuestions(...args),
+}));
+
+const threeQuestions = [
+  { question: "Q1?", choices: ["right1", "wrong1"], correctIndex: 0 },
+  { question: "Q2?", choices: ["right2", "wrong2"], correctIndex: 0 },
+  { question: "Q3?", choices: ["right3", "wrong3"], correctIndex: 0 },
+];
+
 class MockIntersectionObserver implements IntersectionObserver {
   readonly root = null;
   readonly rootMargin = "";
@@ -68,6 +79,7 @@ beforeEach(() => {
   listSelectedPerks.mockClear();
   listInventoryItems.mockClear().mockResolvedValue([]);
   runPostSessionEffects.mockClear();
+  loadChapterQuestions.mockClear().mockResolvedValue(null);
   MockIntersectionObserver.instances = [];
   vi.stubGlobal("IntersectionObserver", MockIntersectionObserver);
   Object.defineProperty(document, "hidden", { value: false, configurable: true });
@@ -155,6 +167,92 @@ describe("ChapterView", () => {
 
     const session = logReadingSession.mock.calls[0][0];
     expect(session.xpAwarded).toBe(7);
+  });
+
+  it("does not show a comprehension check when none is authored for this chapter", async () => {
+    render(<ChapterView book={book} chapter={chapter} />);
+    await act(async () => {});
+    expect(screen.queryByText(/Comprehension Check/)).toBeNull();
+  });
+
+  it("verifies via a passed comprehension check even with an empty reflection", async () => {
+    loadChapterQuestions.mockResolvedValue(threeQuestions);
+    render(<ChapterView book={book} chapter={chapter} />);
+    await act(async () => {});
+
+    act(() => {
+      window.dispatchEvent(new Event("focus"));
+      vi.advanceTimersByTime(10_000);
+    });
+    act(() => {
+      MockIntersectionObserver.instances[0].fireIntersecting();
+    });
+
+    // 2 of 3 correct clears the 2/3 pass threshold.
+    fireEvent.click(screen.getByText("right1"));
+    fireEvent.click(screen.getByText("right2"));
+    fireEvent.click(screen.getByText("wrong3"));
+
+    await act(async () => {
+      fireEvent.click(screen.getByText("LOG SESSION"));
+    });
+
+    const session = logReadingSession.mock.calls[0][0];
+    expect(session.comprehensionPassed).toBe(true);
+    expect(session.verified).toBe(true);
+    expect(session.reflection).toBeNull();
+  });
+
+  it("fails verification on a failed comprehension check, overriding an otherwise-good reflection", async () => {
+    loadChapterQuestions.mockResolvedValue(threeQuestions);
+    render(<ChapterView book={book} chapter={chapter} />);
+    await act(async () => {});
+
+    act(() => {
+      window.dispatchEvent(new Event("focus"));
+      vi.advanceTimersByTime(10_000);
+    });
+    act(() => {
+      MockIntersectionObserver.instances[0].fireIntersecting();
+    });
+    fireEvent.change(screen.getByLabelText(/Reflection/), { target: { value: fifteenWords } });
+
+    // Only 1 of 3 correct — fails the 2/3 threshold.
+    fireEvent.click(screen.getByText("wrong1"));
+    fireEvent.click(screen.getByText("wrong2"));
+    fireEvent.click(screen.getByText("right3"));
+
+    await act(async () => {
+      fireEvent.click(screen.getByText("LOG SESSION"));
+    });
+
+    const session = logReadingSession.mock.calls[0][0];
+    expect(session.comprehensionPassed).toBe(false);
+    expect(session.verified).toBe(false);
+  });
+
+  it("falls back to the reflection when the comprehension check is left unanswered", async () => {
+    loadChapterQuestions.mockResolvedValue(threeQuestions);
+    render(<ChapterView book={book} chapter={chapter} />);
+    await act(async () => {});
+
+    act(() => {
+      window.dispatchEvent(new Event("focus"));
+      vi.advanceTimersByTime(10_000);
+    });
+    act(() => {
+      MockIntersectionObserver.instances[0].fireIntersecting();
+    });
+    fireEvent.change(screen.getByLabelText(/Reflection/), { target: { value: fifteenWords } });
+    // Leave all comprehension questions unanswered.
+
+    await act(async () => {
+      fireEvent.click(screen.getByText("LOG SESSION"));
+    });
+
+    const session = logReadingSession.mock.calls[0][0];
+    expect(session.comprehensionPassed).toBeNull();
+    expect(session.verified).toBe(true);
   });
 
   it("disables the reflection field and button after logging", async () => {

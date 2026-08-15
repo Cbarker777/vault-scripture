@@ -1,0 +1,42 @@
+[
+  {
+    "chapter": 23,
+    "questions": [
+      {
+        "question": "What does the psalm compare Yahweh to?",
+        "choices": ["A shepherd", "A king", "A warrior"],
+        "correctIndex": 0
+      },
+      {
+        "question": "Where does the psalmist say Yahweh leads him?",
+        "choices": ["Through a desert", "Beside still waters", "Up a mountain"],
+        "correctIndex": 1
+      },
+      {
+        "question": "What does Yahweh prepare for the psalmist?",
+        "choices": ["A tent", "A boat", "A table in the presence of his enemies"],
+        "correctIndex": 2
+      }
+    ]
+  },
+  {
+    "chapter": 117,
+    "questions": [
+      {
+        "question": "Who is called on to praise Yahweh in this psalm?",
+        "choices": ["Only the priests", "Only Israel", "All nations and peoples"],
+        "correctIndex": 2
+      },
+      {
+        "question": "Which two qualities of Yahweh are given as reasons for praise?",
+        "choices": ["Wealth and power", "Loving kindness and faithfulness", "Wisdom and strength"],
+        "correctIndex": 1
+      },
+      {
+        "question": "How long does the psalm say Yahweh's faithfulness endures?",
+        "choices": ["For a season", "For a thousand years", "Forever"],
+        "correctIndex": 2
+      }
+    ]
+  }
+]

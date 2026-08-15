@@ -1,0 +1,22 @@
+[
+  {
+    "chapter": 13,
+    "questions": [
+      {
+        "question": "According to this chapter, what three things remain when prophecies, tongues, and knowledge pass away?",
+        "choices": ["Wisdom and truth", "Faith, hope, and love", "Joy and peace"],
+        "correctIndex": 1
+      },
+      {
+        "question": "Which of these is listed as a quality of love in this chapter?",
+        "choices": ["Love is patient and kind", "Love is proud", "Love seeks its own way"],
+        "correctIndex": 0
+      },
+      {
+        "question": "Which is named as \"the greatest\" of the three that remain?",
+        "choices": ["Faith", "Hope", "Love"],
+        "correctIndex": 2
+      }
+    ]
+  }
+]

@@ -1,0 +1,26 @@
+[
+  {
+    "chapter": 2,
+    "questions": [
+      {
+        "question": "Why did Joseph and Mary travel to Bethlehem?",
+        "choices": [
+          "To register for a census decreed by Caesar Augustus",
+          "To visit family",
+          "To pay taxes at the temple"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "question": "Who were the first to visit the newborn Jesus?",
+        "choices": ["Shepherds", "Wise men", "Roman soldiers"],
+        "correctIndex": 0
+      },
+      {
+        "question": "Where did Mary lay the baby because there was no room in the inn?",
+        "choices": ["A basket", "A feeding trough", "A bed of straw in a house"],
+        "correctIndex": 1
+      }
+    ]
+  }
+]

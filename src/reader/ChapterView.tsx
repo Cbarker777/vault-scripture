@@ -1,5 +1,9 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { Book, Chapter } from "../data/bible/types";
+import { loadChapterQuestions } from "../data/questions";
+import { gradeComprehensionCheck } from "../data/questions/grade";
+import { pickQuestions } from "../data/questions/pickQuestions";
+import type { ComprehensionQuestion } from "../data/questions/types";
 import {
   hasReadChapterBefore,
   listInventoryItems,
@@ -25,6 +29,8 @@ type LoggedState = {
 
 export function ChapterView({ book, chapter }: { book: Book; chapter: Chapter }) {
   const [reflection, setReflection] = useState("");
+  const [questions, setQuestions] = useState<ComprehensionQuestion[] | null>(null);
+  const [answers, setAnswers] = useState<(number | null)[]>([]);
   const [logged, setLogged] = useState<LoggedState | null>(null);
   const [logging, setLogging] = useState(false);
   const [logError, setLogError] = useState<string | null>(null);
@@ -36,17 +42,43 @@ export function ChapterView({ book, chapter }: { book: Book; chapter: Chapter })
   const dwellSeconds = useDwellTimer(logged === null);
   const scrollCompleted = useScrollCompletion(lastVerseRef);
 
+  useEffect(() => {
+    let cancelled = false;
+    void loadChapterQuestions(book.id, chapter.number).then((all) => {
+      if (cancelled || !all) return;
+      const picked = pickQuestions(all);
+      setQuestions(picked);
+      setAnswers(new Array(picked.length).fill(null));
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [book.id, chapter.number]);
+
+  function selectAnswer(questionIndex: number, choiceIndex: number) {
+    setAnswers((prev) => {
+      const next = [...prev];
+      next[questionIndex] = choiceIndex;
+      return next;
+    });
+  }
+
   async function handleLogSession() {
     setLogging(true);
     setLogError(null);
 
     try {
+      const allAnswered = questions !== null && answers.every((a) => a !== null);
+      const comprehensionPassed = allAnswered
+        ? gradeComprehensionCheck(questions!, answers as number[])
+        : null;
+
       const verified = isVerified({
         dwellSeconds,
         wordCount: chapter.wordCount,
         scrollCompleted,
         reflection,
-        comprehensionPassed: null,
+        comprehensionPassed,
       });
 
       const [alreadyRead, perks, inventory] = await Promise.all([
@@ -73,7 +105,7 @@ export function ChapterView({ book, chapter }: { book: Book; chapter: Chapter })
         endedAt: new Date().toISOString(),
         dwellSeconds,
         reflection: reflection.trim().length > 0 ? reflection.trim() : null,
-        comprehensionPassed: null,
+        comprehensionPassed,
         xpAwarded,
         verified,
       };
@@ -132,6 +164,43 @@ export function ChapterView({ book, chapter }: { book: Book; chapter: Chapter })
             disabled={logged !== null}
             onChange={(e) => setReflection(e.target.value)}
           />
+
+          {questions && (
+            <div className="mt-6">
+              <div className="chrome-label mb-1" style={{ color: "var(--amber)" }}>
+                Comprehension Check (optional)
+              </div>
+              <p className="mb-3" style={{ color: "var(--phosphor-dim)" }}>
+                Answer all {questions.length} to verify instead of writing a reflection —
+                answering here takes priority over the reflection above.
+              </p>
+              <div className="flex flex-col gap-4">
+                {questions.map((q, qi) => (
+                  <div key={q.question}>
+                    <div className="chrome-label mb-2">{q.question}</div>
+                    <div className="flex flex-wrap gap-2">
+                      {q.choices.map((choice, ci) => (
+                        <button
+                          key={choice}
+                          type="button"
+                          disabled={logged !== null}
+                          className="border border-current px-2 py-1 disabled:opacity-40"
+                          style={{
+                            background: answers[qi] === ci ? "var(--phosphor)" : "transparent",
+                            color: answers[qi] === ci ? "var(--vault)" : "var(--phosphor)",
+                          }}
+                          onClick={() => selectAnswer(qi, ci)}
+                        >
+                          {choice}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           <div className="mt-3 flex items-center gap-3">
             <button
               type="button"

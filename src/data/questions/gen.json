@@ -1,0 +1,62 @@
+[
+  {
+    "chapter": 1,
+    "questions": [
+      {
+        "question": "On which day did God create the sun, moon, and stars?",
+        "choices": ["The third day", "The fourth day", "The sixth day"],
+        "correctIndex": 1
+      },
+      {
+        "question": "What did God create on the sixth day?",
+        "choices": ["Fish and birds", "Plants and trees", "Land animals and man"],
+        "correctIndex": 2
+      },
+      {
+        "question": "What did God call the light he created?",
+        "choices": ["Day", "Morning", "Sky"],
+        "correctIndex": 0
+      }
+    ]
+  },
+  {
+    "chapter": 3,
+    "questions": [
+      {
+        "question": "Who spoke to the woman first in this chapter?",
+        "choices": ["God", "Adam", "The serpent"],
+        "correctIndex": 2
+      },
+      {
+        "question": "What did Yahweh God make for Adam and his wife before sending them out of the garden?",
+        "choices": ["Coats of animal skins", "Garments of fig leaves", "Nothing at all"],
+        "correctIndex": 0
+      },
+      {
+        "question": "What reason did the woman give for eating the fruit?",
+        "choices": ["She was hungry", "The serpent deceived her", "Adam told her to"],
+        "correctIndex": 1
+      }
+    ]
+  },
+  {
+    "chapter": 7,
+    "questions": [
+      {
+        "question": "How many pairs of clean animals did Noah take into the ship?",
+        "choices": ["One pair", "Two pairs", "Seven pairs"],
+        "correctIndex": 2
+      },
+      {
+        "question": "How old was Noah when the flood came on the earth?",
+        "choices": ["Five hundred years old", "Six hundred years old", "Nine hundred years old"],
+        "correctIndex": 1
+      },
+      {
+        "question": "How many days and nights did it rain?",
+        "choices": ["Seven days and nights", "Forty days and nights", "One hundred days and nights"],
+        "correctIndex": 1
+      }
+    ]
+  }
+]

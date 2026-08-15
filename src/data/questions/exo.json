@@ -1,0 +1,26 @@
+[
+  {
+    "chapter": 20,
+    "questions": [
+      {
+        "question": "According to this chapter, why did Yahweh rest on the seventh day?",
+        "choices": [
+          "Because he made heaven and earth in six days and rested the seventh",
+          "Because Moses commanded it",
+          "Because the people needed a break"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "question": "How did the people react when they saw the thunder, lightning, and smoking mountain?",
+        "choices": ["They trembled and stayed at a distance", "They danced for joy", "They climbed the mountain"],
+        "correctIndex": 0
+      },
+      {
+        "question": "Which of these is one of the commandments listed in this chapter?",
+        "choices": ["\"You shall not steal\"", "\"You shall not lie to your parents\"", "\"You shall keep the feast\""],
+        "correctIndex": 0
+      }
+    ]
+  }
+]

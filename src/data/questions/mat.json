@@ -1,0 +1,26 @@
+[
+  {
+    "chapter": 5,
+    "questions": [
+      {
+        "question": "According to this chapter, who \"shall inherit the earth\"?",
+        "choices": ["The gentle", "The rich", "The powerful"],
+        "correctIndex": 0
+      },
+      {
+        "question": "What does Jesus say his followers are, using the words \"salt\" and \"light\"?",
+        "choices": ["Salt and light of the temple", "Salt and light of the world", "Salt and light of the law"],
+        "correctIndex": 1
+      },
+      {
+        "question": "What does Jesus say about being angry with your brother?",
+        "choices": [
+          "It puts a person in danger of judgment",
+          "It is always forgivable",
+          "It is only a sin if acted upon"
+        ],
+        "correctIndex": 0
+      }
+    ]
+  }
+]

@@ -1,0 +1,22 @@
+[
+  {
+    "chapter": 17,
+    "questions": [
+      {
+        "question": "What weapon did David use to strike down Goliath?",
+        "choices": ["A sword", "A spear", "A sling and a stone"],
+        "correctIndex": 2
+      },
+      {
+        "question": "What was David's occupation before the battle?",
+        "choices": ["Shepherd", "Soldier", "Priest"],
+        "correctIndex": 0
+      },
+      {
+        "question": "What did David do with Goliath's head after killing him?",
+        "choices": ["Buried it", "Brought it to Jerusalem", "Left it on the battlefield"],
+        "correctIndex": 1
+      }
+    ]
+  }
+]

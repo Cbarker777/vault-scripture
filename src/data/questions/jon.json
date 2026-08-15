@@ -1,0 +1,22 @@
+[
+  {
+    "chapter": 1,
+    "questions": [
+      {
+        "question": "Where was Jonah told to go?",
+        "choices": ["Nineveh", "Tarshish", "Jerusalem"],
+        "correctIndex": 0
+      },
+      {
+        "question": "What did the sailors do to Jonah when the storm wouldn't stop?",
+        "choices": ["Gave him more food", "Threw him into the sea", "Turned the ship around"],
+        "correctIndex": 1
+      },
+      {
+        "question": "What happened to Jonah after he was thrown into the sea?",
+        "choices": ["He swam to shore", "He drowned", "A great fish swallowed him"],
+        "correctIndex": 2
+      }
+    ]
+  }
+]

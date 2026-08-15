@@ -1,0 +1,22 @@
+[
+  {
+    "chapter": 2,
+    "questions": [
+      {
+        "question": "What sound accompanied the coming of the Holy Spirit?",
+        "choices": ["A trumpet blast", "A rushing mighty wind", "Thunder"],
+        "correctIndex": 1
+      },
+      {
+        "question": "What appeared and rested on each of them?",
+        "choices": ["Tongues like fire", "A dove", "A bright star"],
+        "correctIndex": 0
+      },
+      {
+        "question": "About how many people were added that day?",
+        "choices": ["About twelve", "About five hundred", "About three thousand"],
+        "correctIndex": 2
+      }
+    ]
+  }
+]

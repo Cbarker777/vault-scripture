@@ -1,0 +1,22 @@
+[
+  {
+    "chapter": 6,
+    "questions": [
+      {
+        "question": "What was Daniel doing when he was caught breaking the king's decree?",
+        "choices": ["Praying three times a day", "Eating forbidden food", "Worshiping an idol"],
+        "correctIndex": 0
+      },
+      {
+        "question": "Which king had Daniel cast into the den of lions?",
+        "choices": ["Nebuchadnezzar", "Darius", "Cyrus"],
+        "correctIndex": 1
+      },
+      {
+        "question": "What happened to Daniel's accusers at the end of the chapter?",
+        "choices": ["They were exiled", "They were forgiven", "They were thrown into the den of lions"],
+        "correctIndex": 2
+      }
+    ]
+  }
+]

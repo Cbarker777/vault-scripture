@@ -1,0 +1,22 @@
+[
+  {
+    "chapter": 21,
+    "questions": [
+      {
+        "question": "What did the voice from heaven say God would wipe away from people's eyes?",
+        "choices": ["Every tear", "Their sins", "Their memories"],
+        "correctIndex": 0
+      },
+      {
+        "question": "What is the New Jerusalem compared to as it comes down from heaven?",
+        "choices": ["A mighty army", "A bride adorned for her husband", "A great mountain"],
+        "correctIndex": 1
+      },
+      {
+        "question": "What material were the city's twelve gates made of?",
+        "choices": ["Gold", "Jasper", "Pearls"],
+        "correctIndex": 2
+      }
+    ]
+  }
+]

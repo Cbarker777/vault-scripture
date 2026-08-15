@@ -1,0 +1,26 @@
+[
+  {
+    "chapter": 6,
+    "questions": [
+      {
+        "question": "How many days did the Israelites march around Jericho?",
+        "choices": ["Three days", "Seven days", "Forty days"],
+        "correctIndex": 1
+      },
+      {
+        "question": "What caused the walls of Jericho to fall down?",
+        "choices": [
+          "An earthquake",
+          "Joshua struck the wall with his staff",
+          "The people shouted after the trumpets sounded"
+        ],
+        "correctIndex": 2
+      },
+      {
+        "question": "Who was spared when Jericho was destroyed?",
+        "choices": ["The king of Jericho", "Rahab and her household", "The priests of Jericho"],
+        "correctIndex": 1
+      }
+    ]
+  }
+]
