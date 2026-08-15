@@ -1,9 +1,16 @@
-export type Screen = "terminal" | "reader" | "archive" | "quests" | "stats" | "stash";
+export type Screen =
+  | "terminal"
+  | "reader"
+  | "archive"
+  | "quests"
+  | "stats"
+  | "stash"
+  | "verses";
 
 export function TerminalHome({
   onNavigate,
 }: {
-  onNavigate: (screen: "reader" | "archive" | "quests" | "stats" | "stash") => void;
+  onNavigate: (screen: "reader" | "archive" | "quests" | "stats" | "stash" | "verses") => void;
 }) {
   return (
     <div className="chrome min-h-screen px-8 py-10 text-sm">
@@ -45,6 +52,13 @@ export function TerminalHome({
           onClick={() => onNavigate("archive")}
         >
           Archive
+        </button>
+        <button
+          type="button"
+          className="chrome-label hover:text-white"
+          onClick={() => onNavigate("verses")}
+        >
+          Saved Verses
         </button>
       </nav>
     </div>

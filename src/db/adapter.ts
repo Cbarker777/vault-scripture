@@ -8,16 +8,25 @@ import migration002 from "./migrations/002_reading_sessions.sql?raw";
 import migration003 from "./migrations/003_caps_ledger.sql?raw";
 import migration004 from "./migrations/004_inventory.sql?raw";
 import migration005 from "./migrations/005_perks.sql?raw";
+import migration006 from "./migrations/006_saved_verses.sql?raw";
 import type { InventoryItem } from "../loot/types";
 import type { PerkId, SelectedPerk } from "../perks/types";
 import type { ReadingSession } from "../session/types";
+import type { SavedVerse } from "../verses/types";
 
 const IDB_NAME = "vault-scripture";
 const IDB_STORE = "sqlite";
 const IDB_KEY = "main";
 const IDB_VERSION = 1;
 
-const MIGRATIONS: string[] = [migration001, migration002, migration003, migration004, migration005];
+const MIGRATIONS: string[] = [
+  migration001,
+  migration002,
+  migration003,
+  migration004,
+  migration005,
+  migration006,
+];
 
 let sqlPromise: Promise<SqlJsStatic> | null = null;
 let dbPromise: Promise<Database> | null = null;
@@ -226,4 +235,47 @@ export async function listSelectedPerks(): Promise<SelectedPerk[]> {
     perkId: String(perkId) as PerkId,
     selectedAt: String(selectedAt),
   }));
+}
+
+export async function saveVerse(verse: SavedVerse): Promise<void> {
+  const db = await getDb();
+  db.run(
+    `INSERT INTO saved_verses (id, book_id, chapter, verse, verse_text, note, saved_at)
+     VALUES (?, ?, ?, ?, ?, ?, ?)`,
+    [
+      verse.id,
+      verse.bookId,
+      verse.chapter,
+      verse.verse,
+      verse.verseText,
+      verse.note,
+      verse.savedAt,
+    ],
+  );
+  await persist(db);
+}
+
+export async function listSavedVerses(): Promise<SavedVerse[]> {
+  const db = await getDb();
+  const res = db.exec(
+    `SELECT id, book_id, chapter, verse, verse_text, note, saved_at
+     FROM saved_verses
+     ORDER BY saved_at DESC`,
+  );
+  if (res.length === 0) return [];
+  return res[0].values.map(([id, bookId, chapter, verse, verseText, note, savedAt]) => ({
+    id: String(id),
+    bookId: String(bookId),
+    chapter: Number(chapter),
+    verse: Number(verse),
+    verseText: String(verseText),
+    note: note === null ? null : String(note),
+    savedAt: String(savedAt),
+  }));
+}
+
+export async function deleteSavedVerse(id: string): Promise<void> {
+  const db = await getDb();
+  db.run("DELETE FROM saved_verses WHERE id = ?", [id]);
+  await persist(db);
 }

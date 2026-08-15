@@ -20,11 +20,17 @@ import { useDwellTimer } from "../session/useDwellTimer";
 import { useScrollCompletion } from "../session/useScrollCompletion";
 import { isVerified } from "../session/verify";
 import { useGameEventsStore } from "../store/gameEvents";
+import { SaveVersePanel } from "../verses/SaveVersePanel";
 
 type LoggedState = {
   verified: boolean;
   xpAwarded: number;
   effects: SessionEffects;
+};
+
+type SelectedVerse = {
+  number: number;
+  text: string;
 };
 
 export function ChapterView({ book, chapter }: { book: Book; chapter: Chapter }) {
@@ -34,6 +40,7 @@ export function ChapterView({ book, chapter }: { book: Book; chapter: Chapter })
   const [logged, setLogged] = useState<LoggedState | null>(null);
   const [logging, setLogging] = useState(false);
   const [logError, setLogError] = useState<string | null>(null);
+  const [selectedVerse, setSelectedVerse] = useState<SelectedVerse | null>(null);
   const startedAtRef = useRef(new Date().toISOString());
   const lastVerseRef = useRef<HTMLSpanElement | null>(null);
   const announceLevelUp = useGameEventsStore((s) => s.announceLevelUp);
@@ -138,7 +145,13 @@ export function ChapterView({ book, chapter }: { book: Book; chapter: Chapter })
             {chapter.verses.map((v, i) => {
               const isLast = i === chapter.verses.length - 1;
               return (
-                <span key={v.number} ref={isLast ? lastVerseRef : undefined}>
+                <span
+                  key={v.number}
+                  ref={isLast ? lastVerseRef : undefined}
+                  onClick={() => setSelectedVerse({ number: v.number, text: v.text })}
+                  style={{ cursor: "pointer" }}
+                  title={`Save ${book.name} ${chapter.number}:${v.number}`}
+                >
                   <sup className="mr-1" style={{ opacity: 0.5 }}>
                     {v.number}
                   </sup>
@@ -149,6 +162,17 @@ export function ChapterView({ book, chapter }: { book: Book; chapter: Chapter })
           </p>
         </div>
       </div>
+
+      {selectedVerse && (
+        <SaveVersePanel
+          bookId={book.id}
+          bookName={book.name}
+          chapter={chapter.number}
+          verseNumber={selectedVerse.number}
+          verseText={selectedVerse.text}
+          onClose={() => setSelectedVerse(null)}
+        />
+      )}
 
       <div className="chrome px-6 py-6 text-sm">
         <div className="measure mx-auto">

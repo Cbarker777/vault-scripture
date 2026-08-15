@@ -14,6 +14,7 @@ import { StashScreen } from "./stash/StashScreen";
 import { StatsScreen } from "./stats/StatsScreen";
 import { useReaderStore } from "./store/reader";
 import { TerminalHome, type Screen } from "./terminal/TerminalHome";
+import { SavedVersesScreen } from "./verses/SavedVersesScreen";
 
 function App() {
   const loaded = useReaderStore((s) => s.loaded);
@@ -72,6 +73,7 @@ function App() {
       {screen === "quests" && <QuestsScreen onOpenReading={openReading} />}
       {screen === "stats" && <StatsScreen />}
       {screen === "stash" && <StashScreen />}
+      {screen === "verses" && <SavedVersesScreen onOpenReading={openReading} />}
 
       <LevelUpRetune />
       <PerkPicker />
