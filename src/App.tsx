@@ -6,8 +6,10 @@ import { LevelUpRetune } from "./game/LevelUpRetune";
 import { applyEquippedTheme } from "./loot/applyEquippedTheme";
 import { PerkPicker } from "./perks/PerkPicker";
 import { QuestsScreen } from "./quests/QuestsScreen";
+import { applyReadingTheme } from "./reader/applyReadingTheme";
 import { BookNav } from "./reader/BookNav";
 import { ReaderPane } from "./reader/ReaderPane";
+import { getStoredReadingThemeId } from "./reader/readingThemeStorage";
 import { StashScreen } from "./stash/StashScreen";
 import { StatsScreen } from "./stats/StatsScreen";
 import { useReaderStore } from "./store/reader";
@@ -23,6 +25,7 @@ function App() {
   useEffect(() => {
     void hydrate();
     void applyEquippedTheme();
+    applyReadingTheme(getStoredReadingThemeId());
   }, [hydrate]);
 
   function completeBoot() {

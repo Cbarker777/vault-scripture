@@ -9,6 +9,12 @@
   --font-mono: "Berkeley Mono", "IBM Plex Mono", ui-monospace, "SFMono-Regular", Consolas,
     monospace;
   --font-serif: "EB Garamond", "Cormorant Garamond", Georgia, serif;
+
+  /* Reading-pane colors are a separate pair from --bone/--vault so a
+     reading theme choice never bleeds into the chrome. Default matches
+     the vault look. */
+  --reading-bg: var(--vault);
+  --reading-fg: var(--bone);
 }
 
 /* Machine chrome: menus, nav, buttons, stats — typed, green, quietly alive. */
@@ -29,8 +35,8 @@
   font-family: var(--font-serif);
   font-size: 19px;
   line-height: 1.75;
-  color: var(--bone);
-  background: var(--vault);
+  color: var(--reading-fg);
+  background: var(--reading-bg);
 }
 
 .reading-pane .measure {

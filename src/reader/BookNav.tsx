@@ -1,10 +1,17 @@
+import { useState } from "react";
 import { BOOKS } from "../data/bible";
 import { useReaderStore } from "../store/reader";
+import { applyReadingTheme } from "./applyReadingTheme";
+import { READING_THEMES, type ReadingThemeId } from "./readingThemes";
+import { getStoredReadingThemeId, setStoredReadingThemeId } from "./readingThemeStorage";
 
 export function BookNav() {
   const bookId = useReaderStore((s) => s.bookId);
   const chapter = useReaderStore((s) => s.chapter);
   const goTo = useReaderStore((s) => s.goTo);
+  const [readingThemeId, setReadingThemeId] = useState<ReadingThemeId>(() =>
+    getStoredReadingThemeId(),
+  );
 
   const currentBook = BOOKS.find((b) => b.id === bookId) ?? BOOKS[0];
 
@@ -14,6 +21,12 @@ export function BookNav() {
 
   function handleChapterChange(nextChapter: number) {
     void goTo(bookId, nextChapter);
+  }
+
+  function handleReadingThemeChange(id: ReadingThemeId) {
+    setReadingThemeId(id);
+    setStoredReadingThemeId(id);
+    applyReadingTheme(id);
   }
 
   return (
@@ -56,6 +69,21 @@ export function BookNav() {
       >
         Next
       </button>
+      <label htmlFor="reading-theme" className="chrome-label ml-auto">
+        Reading Theme
+      </label>
+      <select
+        id="reading-theme"
+        className="chrome-label border border-current bg-transparent px-2 py-1"
+        value={readingThemeId}
+        onChange={(e) => handleReadingThemeChange(e.target.value as ReadingThemeId)}
+      >
+        {READING_THEMES.map((t) => (
+          <option key={t.id} value={t.id} style={{ background: "var(--vault)" }}>
+            {t.name}
+          </option>
+        ))}
+      </select>
     </nav>
   );
 }
