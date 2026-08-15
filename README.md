@@ -26,44 +26,43 @@ there's no account system or sync between them (that's intentional, see
 `CLAUDE.md` §1's non-goals). Treat it as "one browser, one save file,"
 even though the container is reachable from anywhere on your network.
 
-### Option A — docker-compose (Compose Manager plugin)
+### Recommended: pull the published image (supports Unraid's Update button)
+
+Every push to `master` is automatically built and published to GitHub
+Container Registry by `.github/workflows/docker-publish.yml`, at
+`ghcr.io/cbarker777/vault-scripture:latest` — no login needed, the
+package is public.
+
+**Via Unraid's Docker tab:** Docker → Add Container → set Repository to
+`ghcr.io/cbarker777/vault-scripture:latest`, map container port `80` to
+whatever host port you want (e.g. `8181`), leave volumes empty, and set
+the WebUI field to `http://[IP]:[PORT:8181]/`. Because this pulls from a
+real registry (unlike building from source locally), Unraid's **Check
+for Updates** / **Update** button works on it exactly like your other
+containers — no terminal needed to update it anymore.
+
+**Via the CLI**, equivalently:
 
 ```bash
-docker compose up -d --build
+docker run -d --name vault-scripture -p 8181:80 --restart unless-stopped ghcr.io/cbarker777/vault-scripture:latest
 ```
 
-Then open `http://<unraid-ip>:8080`. Edit the port mapping in
-`docker-compose.yml` if 8080 is taken.
+### Alternative: build from source
 
-### Option B — plain `docker build` / `docker run`
+Useful if you want to test local changes before they're pushed.
 
 ```bash
 docker build -t vault-scripture .
-docker run -d --name vault-scripture -p 8080:80 --restart unless-stopped vault-scripture
+docker run -d --name vault-scripture -p 8181:80 --restart unless-stopped vault-scripture
 ```
 
-### Option C — Unraid's Docker tab, from source
-
-Add a container manually: point it at this repo (or a registry image you
-push yourself), leave volumes empty, map container port `80` to whatever
-host port you want, and set the WebUI field to
-`http://[IP]:[PORT:8080]/` so it shows up with a launch icon.
-
-### Updating
-
-Once it's running, pull and redeploy new commits with:
-
-```bash
-bash update.sh
-```
-
-(`bash update.sh` works regardless of the executable bit; `./update.sh`
-works too if you've `chmod +x`'d it.) It pulls the latest commit,
-rebuilds the image, and swaps the running container for a fresh one.
-Edit the `HOST_PORT`/`CONTAINER_NAME` variables at the top of the script
-if your setup differs from the defaults (8181, `vault-scripture`).
-Reading progress is untouched either way — it lives in the browser, not
-the container.
+or `docker compose up -d --build` (edit the port in `docker-compose.yml`
+first if 8080 is taken). To update a source-built deployment, `bash
+update.sh` pulls the latest commit, rebuilds, and swaps the running
+container for a fresh one — see the script for the
+`HOST_PORT`/`CONTAINER_NAME` variables if your setup differs from the
+defaults. Either way, reading progress is untouched by any of this — it
+lives in the browser, not the container.
 
 ### Reaching it off your LAN
 
