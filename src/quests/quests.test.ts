@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { ReadingSession } from "../session/types";
-import { deriveQuests } from "./quests";
+import { deriveQuests, firstUnreadChapter } from "./quests";
 
 function session(overrides: Partial<ReadingSession>): ReadingSession {
   return {
@@ -71,5 +71,24 @@ describe("deriveQuests", () => {
     ]);
     const ruth = quests.find((q) => q.bookId === "rut")!;
     expect(ruth.completedAt).toBe("2026-01-04T00:00:00.000Z");
+  });
+});
+
+describe("firstUnreadChapter", () => {
+  it("returns chapter 1 when nothing has been read", () => {
+    expect(firstUnreadChapter(50, [])).toBe(1);
+  });
+
+  it("returns the chapter right after the last one read, when read in order", () => {
+    expect(firstUnreadChapter(50, [1])).toBe(2);
+    expect(firstUnreadChapter(50, [1, 2, 3])).toBe(4);
+  });
+
+  it("returns a gap instead of skipping past it", () => {
+    expect(firstUnreadChapter(50, [1, 3])).toBe(2);
+  });
+
+  it("falls back to chapter 1 once every chapter has been read", () => {
+    expect(firstUnreadChapter(4, [1, 2, 3, 4])).toBe(1);
   });
 });

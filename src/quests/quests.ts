@@ -38,3 +38,14 @@ export function deriveQuests(sessions: ReadingSession[]): Quest[] {
     completedAt: completedAtByBook.get(b.id) ?? null,
   }));
 }
+
+// The lowest chapter number not yet read, honoring gaps (e.g. having
+// read 1 and 3 but not 2 means chapter 2, not 4). Falls back to chapter
+// 1 once every chapter has been read at least once.
+export function firstUnreadChapter(chapterCount: number, chaptersRead: number[]): number {
+  const read = new Set(chaptersRead);
+  for (let c = 1; c <= chapterCount; c++) {
+    if (!read.has(c)) return c;
+  }
+  return 1;
+}

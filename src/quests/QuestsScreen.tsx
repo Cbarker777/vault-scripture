@@ -4,7 +4,7 @@ import { PLANS } from "../data/plans";
 import { listReadingSessions } from "../db/adapter";
 import type { ReadingSession } from "../session/types";
 import { getBountyForDate, isBountyComplete } from "./bounty";
-import { deriveQuests } from "./quests";
+import { deriveQuests, firstUnreadChapter } from "./quests";
 
 function bookName(bookId: string): string {
   return BOOKS.find((b) => b.id === bookId)?.name ?? bookId;
@@ -135,14 +135,17 @@ export function QuestsScreen({
           {quests.map((q) => {
             const book = BOOKS.find((b) => b.id === q.bookId)!;
             const pct = Math.round((q.chaptersRead.length / book.chapterCount) * 100);
+            const nextChapter = firstUnreadChapter(book.chapterCount, q.chaptersRead);
             return (
               <li key={q.bookId} className="flex items-center gap-3">
-                <span
-                  className="chrome-label w-40 shrink-0"
+                <button
+                  type="button"
+                  className="chrome-label w-40 shrink-0 text-left underline hover:text-white"
                   style={{ color: q.completedAt ? "var(--amber)" : "var(--phosphor)" }}
+                  onClick={() => onOpenReading(q.bookId, nextChapter)}
                 >
                   {book.name}
-                </span>
+                </button>
                 <div className="h-2 flex-1 border border-current">
                   <div
                     style={{
