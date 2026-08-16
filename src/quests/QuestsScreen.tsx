@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { BOOKS } from "../data/bible";
 import { PLANS } from "../data/plans";
+import { getStoredPlanId, setStoredPlanId } from "../data/plans/planStorage";
+import { firstIncompletePlanDay } from "../data/plans/progress";
 import { listReadingSessions } from "../db/adapter";
 import type { ReadingSession } from "../session/types";
 import { getBountyForDate, isBountyComplete } from "./bounty";
@@ -16,8 +18,11 @@ export function QuestsScreen({
   onOpenReading: (bookId: string, chapter: number) => void;
 }) {
   const [sessions, setSessions] = useState<ReadingSession[] | null>(null);
-  const [selectedPlanId, setSelectedPlanId] = useState(PLANS[0].id);
-  const [selectedDay, setSelectedDay] = useState(1);
+  const [selectedPlanId, setSelectedPlanId] = useState(() => getStoredPlanId());
+  // null = auto-track progress (advance as days are completed); a number
+  // means the user manually browsed to a specific day and it should stick
+  // until they switch plans.
+  const [selectedDay, setSelectedDay] = useState<number | null>(null);
 
   useEffect(() => {
     void listReadingSessions().then(setSessions);
@@ -41,7 +46,8 @@ export function QuestsScreen({
   const readSet = new Set(sessions.map((s) => `${s.bookId}:${s.chapter}`));
 
   const selectedPlan = PLANS.find((p) => p.id === selectedPlanId) ?? PLANS[0];
-  const dayReadings = selectedPlan.days.find((d) => d.day === selectedDay)?.readings ?? [];
+  const effectiveDay = selectedDay ?? firstIncompletePlanDay(selectedPlan, readSet);
+  const dayReadings = selectedPlan.days.find((d) => d.day === effectiveDay)?.readings ?? [];
   const dayReadCount = dayReadings.filter((r) => readSet.has(`${r.bookId}:${r.chapter}`)).length;
 
   return (
@@ -85,7 +91,8 @@ export function QuestsScreen({
               }}
               onClick={() => {
                 setSelectedPlanId(plan.id);
-                setSelectedDay(1);
+                setStoredPlanId(plan.id);
+                setSelectedDay(null);
               }}
             >
               {plan.name}
@@ -101,7 +108,7 @@ export function QuestsScreen({
             type="number"
             min={1}
             max={selectedPlan.days.length}
-            value={selectedDay}
+            value={effectiveDay}
             onChange={(e) => {
               const n = Number(e.target.value);
               if (n >= 1 && n <= selectedPlan.days.length) setSelectedDay(n);
