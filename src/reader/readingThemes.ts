@@ -1,4 +1,4 @@
-export type ReadingThemeId = "vault" | "parchment" | "high-contrast" | "dim";
+export type ReadingThemeId = "vault" | "parchment" | "high-contrast" | "dim" | "terminal";
 
 export type ReadingTheme = {
   id: ReadingThemeId;
@@ -15,6 +15,7 @@ export const READING_THEMES: ReadingTheme[] = [
   { id: "parchment", name: "Parchment", bg: "#f4ecd8", fg: "#2b2620" },
   { id: "high-contrast", name: "High Contrast", bg: "#ffffff", fg: "#000000" },
   { id: "dim", name: "Dim", bg: "#1a1a1a", fg: "#c8c8c8" },
+  { id: "terminal", name: "Terminal", bg: "#0a0d0a", fg: "#3ee66b" },
 ];
 
 export const DEFAULT_READING_THEME_ID: ReadingThemeId = "vault";
